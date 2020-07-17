@@ -49,7 +49,7 @@ function StartGameDialog(props: StartGameDialogProps) {
             className='start-join-game'
         >
             <DialogTitle>
-                Welcome to Quarantined Wizzards!
+                Welcome to Dumbal!
             </DialogTitle>
             <DialogContent>
                 {isJoining && (
