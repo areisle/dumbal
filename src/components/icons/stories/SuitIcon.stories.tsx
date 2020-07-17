@@ -18,20 +18,6 @@ Spades.args = {
     variant: SUIT.SPADES,
 };
 
-export const Wizard = (props: SuitIconProps) => (
-    <SuitIcon
-        {...props}
-        variant={SUIT.WIZARD}
-    />
-);
-
-export const Jester = (props: SuitIconProps) => (
-    <SuitIcon
-        {...props}
-        variant={SUIT.JESTER}
-    />
-);
-
 export const Diamonds = (props: SuitIconProps) => (
     <SuitIcon
         {...props}

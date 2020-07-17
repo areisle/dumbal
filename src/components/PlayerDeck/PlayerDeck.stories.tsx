@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { GAME_STAGE, SUIT } from '../../types';
+import { SUIT } from '../../types';
 import { PlayerDeck, PlayerDeckProps } from '.';
 
 const PlayerNumberDecorator = (storyFn: any) => (
@@ -17,22 +17,10 @@ const PlayerNumberDecorator = (storyFn: any) => (
 
 const cards = [
     { suit: SUIT.HEARTS, number: 3 },
-    { suit: SUIT.HEARTS, number: 8 },
-    { suit: SUIT.HEARTS, number: 1 },
     { suit: SUIT.DIAMONDS, number: 8 },
-    { suit: SUIT.DIAMONDS, number: 9 },
-    { suit: SUIT.DIAMONDS, number: 10 },
     { suit: SUIT.DIAMONDS, number: 13 },
-    { suit: SUIT.CLUBS, number: 2 },
     { suit: SUIT.CLUBS, number: 4 },
-    { suit: SUIT.CLUBS, number: 5 },
-    { suit: SUIT.CLUBS, number: 11 },
-    { suit: SUIT.CLUBS, number: 12 },
-    { suit: SUIT.SPADES, number: 5 },
-    { suit: SUIT.SPADES, number: 6 },
     { suit: SUIT.SPADES, number: 10 },
-    { suit: SUIT.WIZARD },
-    { suit: SUIT.JESTER },
 ];
 
 export default {
@@ -49,6 +37,7 @@ export const ClosedWithOneCard = (props: PlayerDeckProps) => (
 
 ClosedWithOneCard.args = {
     cards: cards.slice(0, 1),
+    playerNumber: 1,
 };
 
 export const OpenWithOneCard = (props: PlayerDeckProps) => (
@@ -56,6 +45,7 @@ export const OpenWithOneCard = (props: PlayerDeckProps) => (
         {...props}
         cards={cards.slice(0, 1)}
         open={true}
+        playerNumber={1}
     />
 );
 
@@ -63,6 +53,7 @@ export const ClosedWithNoCards = (props: PlayerDeckProps) => (
     <PlayerDeck
         {...props}
         cards={[]}
+        playerNumber={1}
     />
 );
 
@@ -70,6 +61,7 @@ export const ClosedWithManyCards = (props: PlayerDeckProps) => (
     <PlayerDeck
         {...props}
         cards={cards}
+        playerNumber={1}
     />
 );
 
@@ -78,16 +70,26 @@ export const OpenWithManyCards = (props: PlayerDeckProps) => (
         {...props}
         cards={cards}
         open={true}
+        playerNumber={1}
     />
 );
 
 export const OpenAsActivePlayer = (props: PlayerDeckProps) => (
     <PlayerDeck
         {...props}
-        activePlayer='areisle'
         cards={cards}
         open={true}
-        playerId='areisle'
-        stage={GAME_STAGE.PLAYING}
+        playerNumber={1}
+    />
+);
+
+export const OpenWithSelectMultiple = (props: PlayerDeckProps) => (
+    <PlayerDeck
+        {...props}
+        allowSelectMultiple={true}
+        cards={cards}
+        open={true}
+        playerNumber={1}
+        showPickAction={true}
     />
 );

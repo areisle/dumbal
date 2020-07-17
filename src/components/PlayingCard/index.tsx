@@ -1,8 +1,10 @@
 import './index.scss';
 
-import React, { HTMLProps } from 'react';
+import clsx from 'clsx';
+import React, { HTMLProps, useMemo } from 'react';
 
 import { Card, SUIT } from '../../types';
+import { getCardLetter } from '../../utilities';
 import { SuitIcon } from '../icons';
 
 export interface PlayingCardProps extends Card {
@@ -18,29 +20,20 @@ export interface PlayingCardProps extends Card {
     selected?: boolean;
     onClick?: HTMLProps<HTMLDivElement>['onClick'];
     children?: HTMLProps<HTMLDivElement>['children'];
+    stacked?: boolean;
 }
 
-function Marker(props: Card) {
-    const { suit, number = null } = props;
+function Marker(props: Card & { small?: boolean }) {
+    const { suit, number = null, small = false } = props;
 
-    let displayNumber: number | string | null = number;
-
-    if (number === 11) {
-        displayNumber = 'J';
-    } else if (number === 12) {
-        displayNumber = 'Q';
-    } else if (displayNumber === 13) {
-        displayNumber = 'K';
-    } else if (displayNumber === 1) {
-        displayNumber = 'A';
-    }
+    const letter = useMemo(() => number && getCardLetter(number), [number]);
 
     return (
-        <div className='marker'>
+        <div className={clsx('marker', { 'marker--small': small })}>
             <SuitIcon
                 variant={suit as SUIT}
             />
-            {displayNumber}
+            {letter}
         </div>
     );
 }
@@ -52,19 +45,23 @@ function PlayingCard(props: PlayingCardProps) {
         number,
         selected,
         children,
+        stacked,
         ...rest
     } = props;
 
     return (
         <div
             {...rest}
-            className={`playing-card playing-card--${size} ${selected ? 'playing-card--selected' : ''}`}
+            className={clsx(`playing-card playing-card--${size}`, {
+                'playing-card--selected': selected,
+                'playing-card--stacked': stacked,
+            })}
         >
-            <Marker number={number} suit={suit} />
+            <Marker number={number} small={stacked} suit={suit} />
             <div className='playing-card__content'>
                 {children}
             </div>
-            <Marker number={number} suit={suit} />
+            <Marker number={number} small={stacked} suit={suit} />
         </div>
     );
 }

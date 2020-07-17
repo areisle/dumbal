@@ -1,13 +1,18 @@
 @import '../../variables';
 
 .score-board {
-    .table-cell--skinny {
-        width: 60px;
-    }
 
     .avatar {
-        max-width: 30vw;
-        word-break: break-word;
+        text-overflow: ellipsis;
+        overflow: hidden;
+
+        @media (min-width: 600px) {
+            max-width: 30vw;
+        }
+    }
+
+    .MuiTableCell-root:not(.avatar) {
+        max-width: 150px;
     }
 
     @media (max-width: 600px) {

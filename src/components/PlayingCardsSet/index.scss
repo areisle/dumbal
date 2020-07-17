@@ -1,0 +1,67 @@
+.playing-cards-set {
+    position: relative;
+
+    &, &__actions {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+    }
+
+    &__cards {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    &__actions {
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 15;
+        pointer-events: none;
+
+        > * {
+            pointer-events: all;
+        }
+    }
+
+    &__card-wrapper {
+        position: relative;
+    }
+
+    &--clipped &__card-wrapper {
+        height: 2.5em;
+    }
+
+    &__card-wrapper:not(:last-child) {
+        height: 2.5em;
+        width: 2.5em;
+        z-index: 5;
+    }
+
+    &--large &__card-wrapper:not(:last-child) {
+        height: 4em;
+        width: 4em;
+    }
+
+    &--flexible &__cards {
+        flex-wrap: wrap;
+    }
+
+    &--flexible &__card-wrapper:not(:last-child) {
+        width: clamp(1.25em, calc(var(--flexible-card-width) * 0.3), 4em);
+        height: clamp(0.5em, calc(var(--flexible-card-width) * 0.3), 4em);
+        font-size: clamp(0.5em, calc(var(--flexible-card-width) * 0.3), 4em);
+    }
+
+    &--flexible &__card-wrapper:not(:last-child) .playing-card {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    &__card-wrapper:last-child {
+        z-index: 10;
+    }
+}

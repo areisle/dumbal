@@ -33,6 +33,14 @@ export const Large = (props: PlayingCardProps) => (
     />
 );
 
+export const LargeAndStacked = (props: PlayingCardProps) => (
+    <PlayingCard
+        {...props}
+        size='large'
+        stacked={true}
+    />
+);
+
 export const FlexibleSize = (props: PlayingCardProps) => (
     <PlayingCard
         {...props}
@@ -46,22 +54,6 @@ export const WithContent = (props: PlayingCardProps) => (
     >
         <TrophyIcon />
     </PlayingCard>
-);
-
-export const Wizard = (props: PlayingCardProps) => (
-    <PlayingCard
-        {...props}
-        number={null}
-        suit={SUIT.WIZARD}
-    />
-);
-
-export const Jester = (props: PlayingCardProps) => (
-    <PlayingCard
-        {...props}
-        number={null}
-        suit={SUIT.JESTER}
-    />
 );
 
 export const Ace = (props: PlayingCardProps) => (

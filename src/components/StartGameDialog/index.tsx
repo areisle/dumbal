@@ -5,15 +5,14 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
+    DialogProps,
     DialogTitle,
     TextField,
     TextFieldProps,
 } from '@material-ui/core';
 import React, { useCallback, useState } from 'react';
 
-import { GameStateDialogProps } from '../useGameStateDialog';
-
-export interface StartGameDialogProps extends GameStateDialogProps {
+export interface StartGameDialogProps extends DialogProps {
     onStart: (newGameId: string) => void;
 }
 
@@ -26,16 +25,16 @@ function StartGameDialog(props: StartGameDialogProps) {
     const [gameId, setGameId] = useState('');
 
     const handleGameIdChange: TextFieldProps['onChange'] = (event) => {
-        let gameCode = event?.target?.value;
+        let nextGameId = event?.target?.value;
         try {
-            const url = new URL(gameCode);
+            const url = new URL(nextGameId);
             if (url.searchParams.get('game')) {
-                gameCode = url.searchParams.get('game') as string;
+                nextGameId = url.searchParams.get('game') as string;
             }
         } catch (err) {
             // pass
         }
-        setGameId(gameCode);
+        setGameId(nextGameId);
     };
 
     const handleJoinGame = useCallback(() => {

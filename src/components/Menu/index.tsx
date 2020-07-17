@@ -10,15 +10,16 @@ import {
     Tabs,
 } from '@material-ui/core';
 import { Refresh } from '@material-ui/icons';
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 
-import { GameContext } from '../../Context';
+import { GameState } from '../../types';
 import { Rules } from '../Rules';
 import { ScoreBoard } from '../ScoreBoard';
 
-interface MenuProps {
+interface MenuProps extends Pick<GameState, 'stage' | 'scores' | 'players' | 'roundNumber'> {
     open: boolean;
     onClose: () => void;
+    onRefreshData: () => void;
 }
 
 enum TAB {
@@ -27,15 +28,15 @@ enum TAB {
 }
 
 function Menu(props: MenuProps) {
-    const { open, onClose } = props;
     const {
-        roundNumber,
-        players,
-        scores,
+        open,
+        onClose,
         stage,
-        trickNumber,
-        refreshGameData,
-    } = useContext(GameContext);
+        scores,
+        players,
+        roundNumber,
+        onRefreshData,
+    } = props;
 
     const [activeTab, setActiveTab] = useState(TAB.SCORES);
 
@@ -45,7 +46,7 @@ function Menu(props: MenuProps) {
 
     const handleRefresh = (e: React.MouseEvent) => {
         e.stopPropagation();
-        refreshGameData();
+        onRefreshData();
     };
 
     return (
@@ -71,12 +72,11 @@ function Menu(props: MenuProps) {
             <DialogContent>
                 {(activeTab === TAB.SCORES) && (
                     <ScoreBoard
+                        allowSelectRound={true}
                         players={players}
                         roundNumber={roundNumber}
                         scores={scores}
                         stage={stage}
-                        trickNumber={trickNumber}
-                        variant='overall'
                     />
                 )}
                 {(activeTab === TAB.RULES) && (
