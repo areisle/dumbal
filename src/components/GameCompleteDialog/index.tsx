@@ -3,69 +3,44 @@ import './index.scss';
 import {
     Dialog,
     DialogContent,
+    DialogProps,
     DialogTitle,
 } from '@material-ui/core';
-import React, { useMemo } from 'react';
+import React from 'react';
 
-import { GameState, PlayerId } from '../../types';
-import { getGameWinners } from '../../utilities';
+import { PlayerId } from '../../types';
+import { getPlayerNumber } from '../../utilities';
 import { PlayerAvatar } from '../Avatar';
 import { TrophyIcon } from '../icons';
-import { GameStateDialogProps } from '../useGameStateDialog';
 
-export interface GameCompleteDialogProps extends GameStateDialogProps {
+export interface GameCompleteDialogProps extends DialogProps {
     players: PlayerId[];
-    scores: GameState['scores'];
+    winnerId: PlayerId;
 }
 
 function GameCompleteDialog(props: GameCompleteDialogProps) {
     const {
         players,
-        scores,
+        winnerId,
         ...rest
     } = props;
-
-    const winners = useMemo(() => getGameWinners(players, scores), [players, scores]);
-
     return (
-        <Dialog {...rest}>
-            <DialogTitle>Game is complete!</DialogTitle>
+        <Dialog {...rest} className='game-complete-dialog'>
+            <DialogTitle>
+                Game is complete!
+                {' '}
+                {winnerId}
+                {' '}
+                has won!
+            </DialogTitle>
             <DialogContent>
-                <div className='game-complete-dialog__podium'>
-                    <div className='podium podium--first'>
-                        <PlayerAvatar
-                            player={winners.first + 1}
-                        >
-                            <TrophyIcon variant='gold' />
 
-                        </PlayerAvatar>
-                        <div className='podium__block'>
-                            {players[winners.first]}
-                        </div>
-                    </div>
-                    <div className='podium podium--second'>
-                        <PlayerAvatar
-                            player={winners.second + 1}
-                        >
-                            <TrophyIcon variant='silver' />
+                <PlayerAvatar
+                    player={getPlayerNumber(players, winnerId)}
+                >
+                    <TrophyIcon variant='gold' />
 
-                        </PlayerAvatar>
-                        <div className='podium__block'>
-                            {players[winners.second]}
-                        </div>
-                    </div>
-                    <div className='podium podium--third'>
-                        <PlayerAvatar
-                            player={winners.third + 1}
-                        >
-                            <TrophyIcon variant='bronze' />
-
-                        </PlayerAvatar>
-                        <div className='podium__block'>
-                            {players[winners.third]}
-                        </div>
-                    </div>
-                </div>
+                </PlayerAvatar>
             </DialogContent>
         </Dialog>
     );

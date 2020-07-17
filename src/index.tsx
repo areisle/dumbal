@@ -1,14 +1,24 @@
 import './index.css';
 
+import { SnackbarProvider } from 'notistack';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import App from './App';
+import { Main } from './Main';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
     <React.StrictMode>
-        <App />
+        <SnackbarProvider
+            anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+            }}
+            dense={true}
+            maxSnack={1}
+        >
+            <Main />
+        </SnackbarProvider>
     </React.StrictMode>,
     document.getElementById('root'),
 );

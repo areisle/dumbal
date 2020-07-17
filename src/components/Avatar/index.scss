@@ -17,6 +17,11 @@
         transform: translate(-35%, -35%) rotate(45deg);
     }
 
+    .MuiTypography-root {
+        background-color: rgba(0, 0, 0, 0.7);
+        padding: 5px;
+    }
+
     &--square {
         align-items: center;
         display: flex;
@@ -32,6 +37,10 @@
         }
     }
 
+    &--disabled {
+        opacity: 0.5;
+    }
+
     &--empty {
         border: 5px dashed grey;
         color: black;
@@ -40,5 +49,5 @@
 
     &--active {
         outline: 3px solid blue;
-    } 
+    }
 }

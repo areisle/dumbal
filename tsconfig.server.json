@@ -6,13 +6,16 @@
         "noImplicitAny": false,
         "noEmitOnError": false,
         "moduleResolution": "node",
+        "strictNullChecks": true,
         "allowSyntheticDefaultImports": true,
         "sourceMap": true,
         "outDir": "dist",
         "baseUrl": ".",
+        "experimentalDecorators": true
     },
     "include": [
         "server/",
-        "src/types.ts"
+        "src/types.ts",
+        "src/utilities.ts"
     ]
 }

@@ -3,191 +3,199 @@ import './index.scss';
 
 import { Button, Typography } from '@material-ui/core';
 import { Done } from '@material-ui/icons';
-import isNil from 'lodash.isnil';
-import React, { ReactNode, useContext } from 'react';
+import clsx from 'clsx';
+import React, { useCallback } from 'react';
 
-import { GameContext } from '../../Context';
-import { Card, GAME_STAGE } from '../../types';
-import { PlayerAvatar } from '../Avatar';
-import { TrophyIcon } from '../icons';
-import { PlayingCard } from '../PlayingCard';
+import {
+    Card, GAME_STAGE, GameState, PlayerId,
+} from '../../types';
+import { Board, BoardChildRenderProps } from '../Board';
+import { LoserIcon, TrophyIcon } from '../icons';
+import { PlayingCardsSet } from '../PlayingCardsSet';
 
-const MAX_NUMBER_OF_PLAYERS = 6;
+export interface GameBoardProps {
+    activePlayer: PlayerId | null;
+    players: PlayerId[];
+    playerId: PlayerId | null;
+    stage: GAME_STAGE;
+    roundLeader: PlayerId | null;
+    discard: Record<PlayerId, Card[]>;
+    onOpenPickFromDiscardDialog: () => void;
+    roundEndedBy: GameState['roundEndedBy'];
+    winners: PlayerId[];
+    ready: GameState['ready'];
+    out: PlayerId[];
+}
 
-function Fillers(props: { players: number, show: boolean; }) {
-    const { players, show } = props;
-    if (!show) {
-        return null;
+interface AvatarContentProps extends BoardChildRenderProps {
+    isCurrent: boolean;
+    stage: GAME_STAGE;
+    cards: Card[] | null;
+    /**
+     * if the active player is the main player, the action buttons should be visible/clickable
+     */
+    showActions: boolean;
+    onClick: any;
+    isWinner: boolean;
+    isLoser: boolean;
+    ready: boolean;
+    /**
+     * the main player is ready
+     */
+    showReady: boolean;
+}
+
+const AvatarContent = (props: AvatarContentProps) => {
+    const {
+        playerId,
+        isActive,
+        isCurrent,
+        stage,
+        isPreviouslyActivePlayer,
+        cards,
+        showActions,
+        onClick,
+        isWinner,
+        isLoser,
+        ready,
+        showReady,
+    } = props;
+
+    let content: JSX.Element | null = null;
+    if (stage === GAME_STAGE.SETTING_UP) {
+        content = (
+            <Typography>{playerId}</Typography>
+        );
+    } else if (stage === GAME_STAGE.PLAYING_CARDS && isActive && isCurrent) {
+        content = (
+            <Typography>it&apos;s your turn to discard....</Typography>
+        );
+    } else if (stage === GAME_STAGE.PLAYING_CARDS && isActive) {
+        content = (
+            <Typography>
+                {playerId}
+                {' '}
+                is discarding....
+            </Typography>
+        );
+    } else if (stage === GAME_STAGE.PICKING_CARD && isActive && isCurrent) {
+        content = (
+            <Typography>it&apos;s your turn to pick a card....</Typography>
+        );
+    } else if (stage === GAME_STAGE.PICKING_CARD && isActive) {
+        content = (
+            <Typography>
+                {playerId}
+                {' '}
+                is picking up....
+            </Typography>
+        );
+    } else if (stage === GAME_STAGE.PICKING_CARD && isPreviouslyActivePlayer && showActions) {
+        content = (
+            <Button
+                color='primary'
+                disabled={!cards?.length}
+                onClick={onClick}
+                size='small'
+                variant='contained'
+            >
+                Pick From Discard
+            </Button>
+        );
+    } else if (stage === GAME_STAGE.BETWEEN_ROUNDS && showReady && ready) {
+        content = (
+            <>
+                {isCurrent ? 'you\'re ready' : `${playerId} is ready`}
+                <Done
+                    fontSize='large'
+                    style={{
+                        fontSize: '3rem',
+                        fill: 'limegreen',
+                        filter: 'drop-shadow(0px 0px 2px rgba(0, 0, 0))',
+                    }}
+                />
+            </>
+        );
+    } else if (stage === GAME_STAGE.BETWEEN_ROUNDS && showReady) {
+        content = (
+            <Typography>
+                waiting for
+                {' '}
+                {playerId}
+                ...
+            </Typography>
+        );
+    } else if ([GAME_STAGE.BETWEEN_ROUNDS, GAME_STAGE.COMPLETE].includes(stage) && isWinner) {
+        content = <TrophyIcon />;
+    } else if ([GAME_STAGE.BETWEEN_ROUNDS, GAME_STAGE.COMPLETE].includes(stage) && isLoser) {
+        content = (
+            <LoserIcon />
+        );
     }
 
-    const shells = new Array(MAX_NUMBER_OF_PLAYERS - players).fill(null).map((_, index) => (
-        <PlayerAvatar
-            key={index + players}
-            empty={true}
-            player={index + players + 1}
-        />
-    ));
-    return (
-        <>{shells}</>
-    );
-}
+    if (
+        cards?.length
+        && !(isActive && stage === GAME_STAGE.PLAYING_CARDS)
+        && !showReady
+    ) {
+        content = (
+            <PlayingCardsSet
+                cards={cards}
+                className={clsx(
+                    'game-board__avatar-content',
+                    `game-board__avatar-content--${cards.length}-cards`,
+                )}
+                size='flexible'
+            >
+                {content}
+            </PlayingCardsSet>
+        );
+    }
 
-interface GameBoardProps {
-    onOpenBettingDialog: () => void;
-}
+    return content;
+};
 
 function GameBoard(props: GameBoardProps) {
-    const { onOpenBettingDialog } = props;
     const {
         activePlayer,
         playerId,
         players,
-        roundNumber,
-        scores,
         stage,
-        trickCards,
-        trickLeader,
+        discard,
+        roundLeader,
+        onOpenPickFromDiscardDialog,
+        winners,
+        roundEndedBy,
         ready,
-        trickWinner,
-    } = useContext(GameContext);
+        out,
+    } = props;
 
-    const isSetup = stage === GAME_STAGE.SETTING_UP;
-    const isPlaying = stage === GAME_STAGE.PLAYING;
-    const isBetting = stage === GAME_STAGE.BETTING;
-    const isBetweenTricks = stage === GAME_STAGE.BETWEEN_TRICKS;
-
-    const avatars = players.map((username, index) => {
-        const { bet } = scores[roundNumber]?.[username] ?? {};
-
-        let content: ReactNode = null;
-        const isActive = activePlayer === username;
-        const isCurrent = playerId === username;
-
-        if (isSetup) {
-            content = (
-                <Typography>{username}</Typography>
-            );
-        } else if (isBetting && isNil(bet) && isCurrent) {
-            content = (
-                <>
-                    <Button
-                        color='primary'
-                        onClick={onOpenBettingDialog}
-                        variant='contained'
-                    >
-                        Place bet
-                    </Button>
-                    {(trickLeader === username) && (
-                        <Typography>(trick leader)</Typography>
-                    )}
-                </>
-            );
-        } else if (isBetting && isNil(bet)) {
-            content = (
-                <>
-                    <Typography>
-                        {username}
-                        {' '}
-                        is placing their bet...
-                    </Typography>
-                    {(trickLeader === username) && (
-                        <Typography>(trick leader)</Typography>
-                    )}
-                </>
-            );
-        } else if (isBetting) {
-            content = (
-                <>
-                    {isCurrent ? 'you\'ve placed your bet' : `${username} has placed their bet`}
-                    <Done
-                        fontSize='large'
-                        style={{
-                            fontSize: '3rem',
-                            fill: 'limegreen',
-                            filter: 'drop-shadow(0px 0px 2px rgba(0, 0, 0))',
-                        }}
-                    />
-                </>
-            );
-        } else if (isPlaying && trickCards[username]) {
-            content = (
-                <PlayingCard
-                    {...trickCards[username] as Card}
-                    size='flexible'
-                />
-            );
-        } else if (isPlaying && isActive && isCurrent) {
-            content = (
-                <Typography>it&apos;s your turn to play a card...</Typography>
-            );
-        } else if (isPlaying && isActive) {
-            content = (
-                <Typography>
-                    {username}
-                    {' '}
-                    is playing a card...
-                </Typography>
-            );
-        } else if (isBetweenTricks && playerId && !ready[playerId]) {
-            content = (
-                <PlayingCard
-                    {...trickCards[username] as Card}
-                    size='flexible'
-                >
-                    {username === trickWinner && (
-                        <TrophyIcon />
-                    )}
-                </PlayingCard>
-            );
-        } else if (isBetweenTricks && ready[username]) {
-            content = (
-                <>
-                    {isCurrent ? 'you\'re ready' : `${username} is ready`}
-                    <Done
-                        fontSize='large'
-                        style={{
-                            fontSize: '3rem',
-                            fill: 'limegreen',
-                            filter: 'drop-shadow(0px 0px 2px rgba(0, 0, 0))',
-                        }}
-                    />
-                </>
-            );
-        } else if (isBetweenTricks) {
-            content = (
-                <Typography>
-                    waiting for
-                    {' '}
-                    {username}
-                    ...
-                </Typography>
-            );
-        }
-        return (
-            <PlayerAvatar
-                key={index}
-                active={isActive}
-                leader={trickLeader === username}
-                player={index + 1}
-            >
-                {content}
-            </PlayerAvatar>
-        );
-    });
+    const renderContent = useCallback((childProps: BoardChildRenderProps) => (
+        <AvatarContent
+            {...childProps}
+            cards={childProps.playerId ? discard[childProps.playerId] : null}
+            isCurrent={childProps.playerId === playerId}
+            isLoser={!winners.includes(childProps.playerId as PlayerId) && roundEndedBy === childProps.playerId}
+            isWinner={winners.includes(childProps.playerId as PlayerId)}
+            onClick={onOpenPickFromDiscardDialog}
+            ready={Boolean(ready[childProps.playerId as PlayerId])}
+            showActions={activePlayer === playerId}
+            showReady={Boolean(ready[playerId as PlayerId])}
+            stage={stage}
+        />
+    ), [activePlayer, discard, onOpenPickFromDiscardDialog, playerId, ready, roundEndedBy, stage, winners]);
 
     return (
-        <div
-            className={`
-                game-board
-                game-board--${isSetup ? MAX_NUMBER_OF_PLAYERS : players.length}-players
-            `}
+        <Board
+            activePlayer={activePlayer}
+            className='game-board'
+            disabled={out}
+            leader={roundLeader}
+            players={players}
+            showEmpty={stage === GAME_STAGE.SETTING_UP}
         >
-            {avatars}
-            <Fillers
-                players={players.length}
-                show={stage === GAME_STAGE.SETTING_UP}
-            />
-        </div>
+            {renderContent}
+        </Board>
     );
 }
 

@@ -1,27 +1,34 @@
 import React from 'react';
 
-const DialogDecorator = (storyFn:any , context: any) => {
-    console.log(context);
-    return (
-        <div
-            style={{
-                position: 'relative',
-                height: 568,
-            }}
-        >
-            {storyFn()}
-        </div>
-    )
-}
+const DialogDecorator = (storyFn:any) => (
+    <div
+        style={{
+            position: 'relative',
+            height: 568,
+        }}
+    >
+        {storyFn()}
+    </div>
+);
 
 const dialogDecoratorArgs = {
     disablePortal: true,
     disableEnforceFocus: true,
     disableScrollLock: true,
     disableAutoFocus: true,
-}
+};
+
+const FullSize = (storyFn: any) => (
+    <div style={{
+        position: 'fixed', width: '100vw', height: '100vh', top: 0, left: 0,
+    }}
+    >
+        {storyFn()}
+    </div>
+);
 
 export {
     DialogDecorator,
     dialogDecoratorArgs,
-}
+    FullSize,
+};

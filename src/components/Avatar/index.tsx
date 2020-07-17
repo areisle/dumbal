@@ -1,6 +1,7 @@
 import './index.scss';
 
 import { Star } from '@material-ui/icons';
+import clsx from 'clsx';
 import React, { HTMLProps, ReactNode } from 'react';
 
 export interface PlayerAvatarProps {
@@ -27,6 +28,8 @@ export interface PlayerAvatarProps {
      */
     empty?: boolean;
     style?: HTMLProps<HTMLDivElement>['style'];
+    className?: string;
+    disabled?: boolean;
 }
 
 function PlayerAvatar(props: PlayerAvatarProps) {
@@ -36,20 +39,26 @@ function PlayerAvatar(props: PlayerAvatarProps) {
         active,
         leader,
         empty,
+        disabled,
+        className,
         ...rest
     } = props;
 
     return (
         <div
-            className={`
-                avatar
-                avatar--square
-                ${player ? `avatar--player-${player}` : ''}
-                ${active ? 'avatar--active' : ''}
-                ${leader ? 'avatar--leader' : ''}
-                ${empty ? 'avatar--empty' : ''}
-            `}
             {...rest}
+            className={clsx(
+                'avatar',
+                'avatar--square',
+                className,
+                {
+                    [`avatar--player-${player}`]: player,
+                    'avatar--active': active,
+                    'avatar--leader': leader,
+                    'avatar--empty': empty,
+                    'avatar--disabled': disabled,
+                },
+            )}
         >
             {children}
             {leader && (

@@ -12,7 +12,7 @@ export interface FooterProps {
     disabled: boolean;
     showReadyButton: boolean;
     onReady: () => void;
-    gameCode: string | null;
+    gameId: string | null;
 }
 
 function Footer(props: FooterProps) {
@@ -22,11 +22,11 @@ function Footer(props: FooterProps) {
         disabled,
         showReadyButton,
         onReady,
-        gameCode,
+        gameId,
     } = props;
 
     const handleAddToClipboard = () => {
-        if (!gameCode) { return; }
+        if (!gameId) { return; }
         copyToClipboard(window.location.href);
     };
 
@@ -56,7 +56,7 @@ function Footer(props: FooterProps) {
                         {' '}
                         <span style={{ textTransform: 'none' }}>
                             {' '}
-                            {gameCode}
+                            {gameId}
                         </span>
                     </Button>
                 </>
@@ -69,7 +69,7 @@ function Footer(props: FooterProps) {
                         onClick={onReady}
                         variant='contained'
                     >
-                        Ready for next trick/round
+                        Ready for next round
                     </Button>
                 </>
             )}

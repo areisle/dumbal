@@ -8,12 +8,6 @@
     &--clubs, &--spades {
         fill: black !important;
     }
-
-    &--wizard, &--jester {
-        color: royalblue;
-        text-transform: uppercase;
-        font-weight: 700 !important;
-    }
 }
 
 .scoreboard-icon {
@@ -35,5 +29,44 @@
 
     &--bronze {
         fill: #cd7f32 !important;
+    }
+}
+
+.loser-icon {
+    font-size: 3em !important;
+    stroke: black;
+
+    &__circle {
+        fill:#ffcc4d;
+    }
+
+    &__tongue {
+        fill:#e75a70;
+    }
+
+    &__tears {
+        fill:#5dadec;
+    }
+
+    &__black {
+        fill: black;
+    }
+}
+
+.explosion-icon {
+    path {
+        stroke: black;
+    }
+    &__red {
+        fill:#ff0000;
+    }
+    &__orange {
+        fill:#ff8000;
+    }
+    &__yellow {
+        fill:#ffe600;
+    }
+    &__black {
+        fill:black;
     }
 }

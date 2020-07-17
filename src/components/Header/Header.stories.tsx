@@ -1,18 +1,11 @@
 import React from 'react';
 
-import { GAME_STAGE, SUIT } from '../../types';
+import { GAME_STAGE } from '../../types';
 import { Header, HeaderProps } from '.';
 
 export default {
     component: Header,
     title: 'Header',
-    args: {
-        stage: GAME_STAGE.PLAYING,
-        trumpSuit: SUIT.HEARTS,
-        roundNumber: 0,
-        trickNumber: 0,
-        totalRounds: 20,
-    },
 };
 
 export const Example = (props: HeaderProps) => (
@@ -28,18 +21,10 @@ export const SettingUp = (props: HeaderProps) => (
     />
 );
 
-export const Betting = (props: HeaderProps) => (
-    <Header
-        {...props}
-        stage={GAME_STAGE.BETTING}
-        trumpSuit={SUIT.CLUBS}
-    />
-);
-
 export const Playing = (props: HeaderProps) => (
     <Header
         {...props}
-        stage={GAME_STAGE.PLAYING}
-        trumpSuit={SUIT.DIAMONDS}
+        roundNumber={0}
+        stage={GAME_STAGE.PLAYING_CARDS}
     />
 );

@@ -2,13 +2,12 @@
 const path = require('path');
 
 const BASE_DIR = path.resolve(__dirname, '..');
-
 module.exports = {
     rootDir: BASE_DIR,
     collectCoverage: true,
     coverageDirectory: 'coverage',
     collectCoverageFrom: [
-        'server/**ts'
+        'server/**ts',
     ],
     coverageReporters: [
         'clover',
@@ -18,12 +17,12 @@ module.exports = {
         'lcov',
     ],
     globals: {
-        "ts-jest": {
-          "tsConfig": "tsconfig.server.json"
-        }
+        'ts-jest': {
+            tsConfig: 'tsconfig.server.json',
+        },
     },
     testRunner: 'jest-circus/runner',
-    testRegex: '.*\\.test\\.ts',
+    testRegex: 'server/.*\\.test\\.ts',
     testEnvironment: 'node',
     testPathIgnorePatterns: [
         '/node_modules/',
@@ -33,5 +32,5 @@ module.exports = {
         'json',
         'ts',
     ],
-    preset: 'ts-jest'
+    preset: 'ts-jest',
 };

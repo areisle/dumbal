@@ -2,8 +2,15 @@ import React from 'react';
 
 import { PlayerAvatar, PlayerAvatarProps } from '.';
 
+const Spaced = (storyFn: any) => (
+    <div style={{ width: 200, height: 200, margin: 20 }}>
+        {storyFn()}
+    </div>
+);
+
 export default {
     component: PlayerAvatar,
+    decorators: [Spaced],
     title: 'PlayerAvatar',
     args: {
         player: null,
@@ -53,6 +60,14 @@ export const Active = (props: PlayerAvatarProps) => (
     <PlayerAvatar
         {...props}
         active={true}
+        player={2}
+    />
+);
+
+export const Disabled = (props: PlayerAvatarProps) => (
+    <PlayerAvatar
+        {...props}
+        disabled={true}
         player={2}
     />
 );

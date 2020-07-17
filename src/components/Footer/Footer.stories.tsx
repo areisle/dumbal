@@ -6,7 +6,7 @@ export default {
     component: Footer,
     title: 'Footer',
     args: {
-        gameCode: '12vK25aQx',
+        gameId: '12vK25aQx',
         disabled: false,
         showAllInButton: false,
         showReadyButton: false,
@@ -31,10 +31,10 @@ export const NotEnoughPlayers = (props: FooterProps) => (
     />
 );
 
-export const NoGameCode = (props: FooterProps) => (
+export const NogameId = (props: FooterProps) => (
     <Footer
         {...props}
-        gameCode={null}
+        gameId={null}
     />
 );
 
