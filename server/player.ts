@@ -81,6 +81,7 @@ class Player {
             cards: cardsToPlay,
             playerId: this.playerId,
             stage: GAME_STAGE.PICKING_CARD as const,
+            count: cards.length - cardsToPlay.length,
         };
     }
 
@@ -280,6 +281,10 @@ class Player {
         return count;
     }
 
+    async getCards() {
+        return this.db.getPlayerCards(this.playerId);
+    }
+
     /**
      * @todo roundEndedBy, roundLeader,
      */
@@ -309,7 +314,13 @@ class Player {
         ]);
 
         // @note I think I hit the limit for Promise.alls typescript definition
-        const stillIn = await this.db.getPlayersStillIn();
+        const [stillIn, cardCounts] = await Promise.all([
+            this.db.getPlayersStillIn(),
+            this.db.forEachPlayerStillIn(async (pId) => {
+                const playerCards = await this.db.getPlayerCards(pId);
+                return playerCards.length;
+            }),
+        ]);
 
         return {
             activePlayer,
@@ -325,6 +336,7 @@ class Player {
             scores,
             stage,
             out: without(players, ...stillIn),
+            cardCounts,
         };
     }
 }

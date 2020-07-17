@@ -25,6 +25,7 @@ export interface GameBoardProps {
     winners: PlayerId[];
     ready: GameState['ready'];
     out: PlayerId[];
+    cardCounts: GameState['cardCounts'];
 }
 
 interface AvatarContentProps extends BoardChildRenderProps {
@@ -168,6 +169,7 @@ function GameBoard(props: GameBoardProps) {
         roundEndedBy,
         ready,
         out,
+        cardCounts,
     } = props;
 
     const renderContent = useCallback((childProps: BoardChildRenderProps) => (
@@ -188,6 +190,7 @@ function GameBoard(props: GameBoardProps) {
     return (
         <Board
             activePlayer={activePlayer}
+            cardCounts={cardCounts}
             className='game-board'
             disabled={out}
             leader={roundLeader}

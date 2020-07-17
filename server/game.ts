@@ -105,11 +105,17 @@ class Game {
 
         const cardsByPlayerId = await this.deal();
 
+        const cardCounts: GameState['cardCounts'] = {};
+        for (const [playerId, cards] of Object.entries(cardsByPlayerId)) {
+            cardCounts[playerId] = cards.length;
+        }
+
         return {
             activePlayer: roundLeader,
             stage: GAME_STAGE.PLAYING_CARDS,
             cardsByPlayerId,
             roundNumber,
+            cardCounts,
         };
     }
 

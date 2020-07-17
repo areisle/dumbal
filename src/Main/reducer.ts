@@ -36,6 +36,7 @@ const initialState: GameState = {
     roundLeader: null,
     discard: {},
     out: [],
+    cardCounts: {},
 };
 
 type Handlers = Omit<(

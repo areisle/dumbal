@@ -14,7 +14,22 @@
         stroke-width: 2px;
         stroke: black;
         top: 0;
-        transform: translate(-35%, -35%) rotate(45deg);
+        transform: translate(-40%, -35%) rotate(45deg);
+    }
+
+    &--count__icon {
+        left: 100%;
+        position: absolute;
+        top: 0;
+        transform: translate(-65%, -35%);
+        background-color: grey;
+        width: 1.1em;
+        height: 1.1em;
+        line-height: 1em;
+        padding: 5px;
+        border-radius: 100%;
+        box-sizing: content-box;
+        font-family: "Roboto", "Helvetica", "Arial", sans-serif;
     }
 
     .MuiTypography-root {

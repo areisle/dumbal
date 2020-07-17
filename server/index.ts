@@ -67,6 +67,7 @@ const server = async ({ port = 3000 }: { port: string | number }) => {
                 stage,
                 cardsByPlayerId,
                 roundNumber,
+                cardCounts,
             } = await game.start();
 
             socket.emitToEachPlayer(gameId, SERVER_EVENTS.ROUND_STARTED, (pId) => ({
@@ -74,6 +75,7 @@ const server = async ({ port = 3000 }: { port: string | number }) => {
                 roundNumber,
                 stage,
                 cards: cardsByPlayerId[pId],
+                cardCounts,
             }));
         });
 
@@ -81,7 +83,8 @@ const server = async ({ port = 3000 }: { port: string | number }) => {
             const card = await player.drawFromDeck();
             callback?.(card);
             const response = await game.startNextTurn();
-            socket.emitTo(game.id, SERVER_EVENTS.CARD_PICKED_FROM_DECK, { playerId: player.id });
+            const cards = await player.getCards();
+            socket.emitTo(game.id, SERVER_EVENTS.CARD_PICKED_FROM_DECK, { playerId: player.id, count: cards.length });
             socket.emitTo(game.id, SERVER_EVENTS.ACTIVE_PLAYER_CHANGED, response);
         });
 
@@ -89,7 +92,8 @@ const server = async ({ port = 3000 }: { port: string | number }) => {
             await player.drawFromDiscard(card);
             callback?.(card);
             const response = await game.startNextTurn();
-            socket.emitTo(game.id, SERVER_EVENTS.CARD_PICKED_FROM_DISCARD, { playerId: player.id, card });
+            const cards = await player.getCards();
+            socket.emitTo(game.id, SERVER_EVENTS.CARD_PICKED_FROM_DISCARD, { playerId: player.id, card, count: cards.length });
             socket.emitTo(game.id, SERVER_EVENTS.ACTIVE_PLAYER_CHANGED, response);
         });
 
@@ -129,6 +133,7 @@ const server = async ({ port = 3000 }: { port: string | number }) => {
                     roundNumber,
                     stage,
                     cardsByPlayerId,
+                    cardCounts,
                 } = await game.startNextRound();
 
                 socket.emitToEachPlayer(game.id, SERVER_EVENTS.ROUND_STARTED, (pId) => ({
@@ -136,6 +141,7 @@ const server = async ({ port = 3000 }: { port: string | number }) => {
                     roundNumber,
                     stage,
                     cards: cardsByPlayerId[pId],
+                    cardCounts,
                 }));
             }
         });

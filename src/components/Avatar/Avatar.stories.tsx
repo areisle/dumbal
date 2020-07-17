@@ -71,3 +71,11 @@ export const Disabled = (props: PlayerAvatarProps) => (
         player={2}
     />
 );
+
+export const WithCount = (props: PlayerAvatarProps) => (
+    <PlayerAvatar
+        {...props}
+        count={4}
+        player={5}
+    />
+);

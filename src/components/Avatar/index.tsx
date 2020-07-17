@@ -30,6 +30,7 @@ export interface PlayerAvatarProps {
     style?: HTMLProps<HTMLDivElement>['style'];
     className?: string;
     disabled?: boolean;
+    count?: number;
 }
 
 function PlayerAvatar(props: PlayerAvatarProps) {
@@ -41,6 +42,7 @@ function PlayerAvatar(props: PlayerAvatarProps) {
         empty,
         disabled,
         className,
+        count,
         ...rest
     } = props;
 
@@ -57,6 +59,7 @@ function PlayerAvatar(props: PlayerAvatarProps) {
                     'avatar--leader': leader,
                     'avatar--empty': empty,
                     'avatar--disabled': disabled,
+                    'avatar--count': count,
                 },
             )}
         >
@@ -66,6 +69,13 @@ function PlayerAvatar(props: PlayerAvatarProps) {
                     className='avatar--leader__icon'
                     fontSize='large'
                 />
+            )}
+            {count && (
+                <div
+                    className='avatar--count__icon'
+                >
+                    {count}
+                </div>
             )}
         </div>
     );

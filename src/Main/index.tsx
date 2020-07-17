@@ -58,6 +58,7 @@ function Main() {
         scores,
         roundEndedBy,
         out,
+        cardCounts,
     } = state;
 
     const [scoreboardOpen, openScoreboard, closeScoreboard] = useBoolean(false);
@@ -190,6 +191,7 @@ function Main() {
             <div className='game-board-wrapper'>
                 <GameBoard
                     activePlayer={activePlayer}
+                    cardCounts={cardCounts}
                     discard={discard}
                     onOpenPickFromDiscardDialog={openDiscard}
                     out={out}
@@ -277,16 +279,6 @@ function Main() {
                 players={players}
                 winnerId={gameWinner}
             />
-
-            {/* <Snackbar
-                autoHideDuration={10000}
-                onClose={() => setSnackbar({ open: false })}
-                open={snackbar.open}
-            >
-                <SnackbarContent
-                    message={snackbar.message}
-                />
-            </Snackbar> */}
         </div>
     );
 }

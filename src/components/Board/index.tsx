@@ -4,7 +4,7 @@ import useComponentSize from '@rehooks/component-size';
 import clsx from 'clsx';
 import React, { ReactNode, useMemo, useRef } from 'react';
 
-import { MAX_NUMBER_OF_PLAYERS, PlayerId } from '../../types';
+import { GameState, MAX_NUMBER_OF_PLAYERS, PlayerId } from '../../types';
 import { PlayerAvatar } from '../Avatar';
 
 export interface BoardChildRenderProps {
@@ -25,6 +25,7 @@ export interface BoardProps {
     children?: (props: BoardChildRenderProps) => ReactNode;
     className?: string;
     disabled: PlayerId[];
+    cardCounts: GameState['cardCounts'];
 }
 
 interface CustomCSSProperties extends React.CSSProperties {
@@ -100,6 +101,7 @@ function Board(props: BoardProps) {
         leader,
         className,
         disabled,
+        cardCounts,
     } = props;
 
     const totalPlayers = showEmpty ? MAX_NUMBER_OF_PLAYERS : players.length;
@@ -116,6 +118,7 @@ function Board(props: BoardProps) {
             <PlayerAvatar
                 key={playerId ?? `index-${i}`}
                 active={isActive}
+                count={cardCounts[playerId]}
                 disabled={isDisabled}
                 empty={!playerId}
                 leader={isLeader}
@@ -129,7 +132,7 @@ function Board(props: BoardProps) {
                 })}
             </PlayerAvatar>
         );
-    }), [activePlayer, children, disabled, leader, players, totalPlayers]);
+    }), [activePlayer, cardCounts, children, disabled, leader, players, totalPlayers]);
 
     const styles = useMemo(() => getGridProperties(
         boardSize.width,

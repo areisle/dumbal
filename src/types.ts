@@ -70,6 +70,7 @@ export interface GameState {
      */
     discard: Record<PlayerId, Card[]>;
     out: PlayerId[];
+    cardCounts: Record<PlayerId, number>;
 }
 
 export enum USER_EVENTS {
@@ -142,13 +143,16 @@ export type ServerEventParams = {
         playerId: PlayerId;
         cards: Card[];
         stage: GAME_STAGE.PICKING_CARD;
+        count: number;
     };
     [SERVER_EVENTS.CARD_PICKED_FROM_DISCARD]: {
         playerId: PlayerId;
         card: Card;
+        count: number;
     };
     [SERVER_EVENTS.CARD_PICKED_FROM_DECK]: {
         playerId: PlayerId;
+        count: number;
     };
     [SERVER_EVENTS.ERROR]: {
         type: string;
@@ -169,6 +173,7 @@ export type ServerEventParams = {
         activePlayer: PlayerId;
         cards: Card[];
         stage: GAME_STAGE;
+        cardCounts: GameState['cardCounts'];
     };
 }
 
