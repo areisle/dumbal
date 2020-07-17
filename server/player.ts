@@ -2,13 +2,19 @@ import without from 'lodash.without';
 
 import {
     Card,
-    GAME_STAGE, GameState, MAX_NUMBER_OF_PLAYERS,
+    GAME_STAGE,
+    GameState,
+    MAX_NUMBER_OF_PLAYERS,
+    MAX_NUMBER_OF_POINTS,
     PlayerId,
 } from '../src/types';
 import {
     determineScoresFromCards,
-    getCardName, getCardsTotal,
-    includesCards, isValidSelection, removeCards,
+    getCardName,
+    getCardsTotal,
+    includesCards,
+    isValidSelection,
+    removeCards,
 } from '../src/utilities';
 import { GameDB } from './db';
 import {
@@ -201,7 +207,7 @@ class Player {
         const playersOut: PlayerId[] = [];
         for (const pId of players) {
             // @todo points
-            if (scoresByPlayerId[pId] >= 10) {
+            if (scoresByPlayerId[pId] >= MAX_NUMBER_OF_POINTS) {
                 playersOut.push(pId);
             }
         }

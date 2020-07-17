@@ -11,7 +11,7 @@ export enum SUIT {
 
 export const MAX_NUMBER_OF_PLAYERS = 6;
 export const MIN_NUMBER_OF_PLAYERS = 2;
-export const MAX_NUMBER_OF_POINTS = 50;
+export const MAX_NUMBER_OF_POINTS = 200;
 
 export type GameId = string;
 
