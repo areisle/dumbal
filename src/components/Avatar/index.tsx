@@ -70,7 +70,7 @@ function PlayerAvatar(props: PlayerAvatarProps) {
                     fontSize='large'
                 />
             )}
-            {count && (
+            {Boolean(count) && (
                 <div
                     className='avatar--count__icon'
                 >
