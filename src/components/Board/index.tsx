@@ -2,6 +2,7 @@ import './Board.scss';
 
 import useComponentSize from '@rehooks/component-size';
 import clsx from 'clsx';
+import without from 'lodash.without';
 import React, { ReactNode, useMemo, useRef } from 'react';
 
 import { GameState, MAX_NUMBER_OF_PLAYERS, PlayerId } from '../../types';
@@ -10,7 +11,6 @@ import { PlayerAvatar } from '../Avatar';
 export interface BoardChildRenderProps {
     playerId: PlayerId | null;
     isActive: boolean;
-    isLeader: boolean;
     isPreviouslyActivePlayer: boolean;
 }
 
@@ -20,7 +20,6 @@ export interface BoardProps {
      */
     showEmpty?: boolean;
     players: PlayerId[];
-    leader?: PlayerId | null;
     activePlayer?: PlayerId | null;
     children?: (props: BoardChildRenderProps) => ReactNode;
     className?: string;
@@ -98,7 +97,6 @@ function Board(props: BoardProps) {
         players,
         children,
         activePlayer,
-        leader,
         className,
         disabled,
         cardCounts,
@@ -108,12 +106,12 @@ function Board(props: BoardProps) {
 
     const boardRef = useRef<HTMLDivElement | null>(null);
     const boardSize = useComponentSize(boardRef);
+    const playersStillIn = useMemo(() => without(players, ...disabled), [disabled, players]);
 
     const avatars = useMemo(() => (new Array(totalPlayers)).fill(null).map((_, i) => {
         const playerId = players[i];
         const isDisabled = disabled.includes(playerId);
         const isActive = Boolean(playerId && playerId === activePlayer);
-        const isLeader = Boolean(playerId && playerId === leader);
         return (
             <PlayerAvatar
                 key={playerId ?? `index-${i}`}
@@ -121,18 +119,16 @@ function Board(props: BoardProps) {
                 count={cardCounts[playerId]}
                 disabled={isDisabled}
                 empty={!playerId}
-                leader={isLeader}
                 player={i + 1}
             >
                 {children?.({
                     isActive,
-                    isLeader,
                     playerId,
-                    isPreviouslyActivePlayer: nextPlayerId(players, playerId) === activePlayer,
+                    isPreviouslyActivePlayer: nextPlayerId(playersStillIn, playerId) === activePlayer,
                 })}
             </PlayerAvatar>
         );
-    }), [activePlayer, cardCounts, children, disabled, leader, players, totalPlayers]);
+    }), [activePlayer, cardCounts, children, disabled, players, playersStillIn, totalPlayers]);
 
     const styles = useMemo(() => getGridProperties(
         boardSize.width,

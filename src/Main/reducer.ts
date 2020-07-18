@@ -53,21 +53,31 @@ const handlers: Handlers = {
         ...state,
         players,
     }),
-    [SERVER_EVENTS.CARD_PICKED_FROM_DISCARD]: (state, params) => {
+    [SERVER_EVENTS.CARD_PICKED_FROM_DISCARD]: (state, { card, playerId, count }) => {
         const { activePlayer, players, discard } = state;
         const prevPlayer = getPreviousPlayer(players, activePlayer);
         return {
             ...state,
             discard: {
                 ...discard,
-                [prevPlayer]: removeCards(discard[prevPlayer], [params.card]),
+                [prevPlayer]: removeCards(discard[prevPlayer], [card]),
+            },
+            cardCounts: {
+                ...state.cardCounts,
+                [playerId]: count,
             },
         };
     },
     /**
      * @todo this may actually not need any state
      */
-    [SERVER_EVENTS.CARD_PICKED_FROM_DECK]: (state, _params) => state,
+    [SERVER_EVENTS.CARD_PICKED_FROM_DECK]: (state, { playerId, count }) => ({
+        ...state,
+        cardCounts: {
+            ...state.cardCounts,
+            [playerId]: count,
+        },
+    }),
     [SERVER_EVENTS.ROUND_COMPLETE]: (state, params) => {
         const { scores, ...rest } = params;
         return {
@@ -75,10 +85,13 @@ const handlers: Handlers = {
             ...rest,
             scores: [...state.scores, scores],
             cards: [],
+            cardCounts: {},
         };
     },
     [SERVER_EVENTS.CARDS_PLAYED]: (state, params) => {
-        const { cards, playerId, stage } = params;
+        const {
+            cards, playerId, stage, count,
+        } = params;
         // add cards played to users discard
         let {
             cards: playerCards,
@@ -95,6 +108,10 @@ const handlers: Handlers = {
                 [playerId]: cards,
             },
             cards: playerCards,
+            cardCounts: {
+                ...state.cardCounts,
+                [playerId]: count,
+            },
         };
     },
     [SERVER_EVENTS.ROUND_STARTED]: (state, params) => ({
@@ -102,6 +119,7 @@ const handlers: Handlers = {
         ...params,
         discard: {},
         roundEndedBy: null,
+        roundLeader: params.activePlayer,
         ready: {},
     }),
     [SERVER_EVENTS.PLAYER_READY]: (state, playerId) => ({

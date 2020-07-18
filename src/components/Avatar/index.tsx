@@ -1,6 +1,5 @@
 import './index.scss';
 
-import { Star } from '@material-ui/icons';
 import clsx from 'clsx';
 import React, { HTMLProps, ReactNode } from 'react';
 
@@ -18,11 +17,6 @@ export interface PlayerAvatarProps {
      */
     active?: boolean;
     /**
-     * whether the avatar represents the leader of the trick
-     * @default false
-     */
-    leader?: boolean;
-    /**
      * avatar that does not yet contain a player
      * @default false
      */
@@ -38,7 +32,6 @@ function PlayerAvatar(props: PlayerAvatarProps) {
         player,
         children,
         active,
-        leader,
         empty,
         disabled,
         className,
@@ -56,7 +49,6 @@ function PlayerAvatar(props: PlayerAvatarProps) {
                 {
                     [`avatar--player-${player}`]: player,
                     'avatar--active': active,
-                    'avatar--leader': leader,
                     'avatar--empty': empty,
                     'avatar--disabled': disabled,
                     'avatar--count': count,
@@ -64,13 +56,7 @@ function PlayerAvatar(props: PlayerAvatarProps) {
             )}
         >
             {children}
-            {leader && (
-                <Star
-                    className='avatar--leader__icon'
-                    fontSize='large'
-                />
-            )}
-            {count && (
+            {Boolean(count) && (
                 <div
                     className='avatar--count__icon'
                 >

@@ -46,7 +46,7 @@ function ScoreBoard(props: ScoreBoardProps) {
                 {playerId}
             </TableCell>
             <TableCell align='right'>
-                {selectedRound !== null && scores[selectedRound][playerId]}
+                {selectedRound !== null && scores[selectedRound]?.[playerId]}
             </TableCell>
             <TableCell align='right'>
                 {totalScores[playerId]}

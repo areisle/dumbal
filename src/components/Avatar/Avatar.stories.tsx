@@ -48,14 +48,6 @@ export const Player3 = (props: PlayerAvatarProps) => (
     />
 );
 
-export const Leader = (props: PlayerAvatarProps) => (
-    <PlayerAvatar
-        {...props}
-        leader={true}
-        player={2}
-    />
-);
-
 export const Active = (props: PlayerAvatarProps) => (
     <PlayerAvatar
         {...props}
