@@ -119,6 +119,7 @@ const handlers: Handlers = {
         ...params,
         discard: {},
         roundEndedBy: null,
+        roundLeader: params.activePlayer,
         ready: {},
     }),
     [SERVER_EVENTS.PLAYER_READY]: (state, playerId) => ({
