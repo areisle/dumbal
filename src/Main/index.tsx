@@ -54,7 +54,6 @@ function Main() {
         ready,
         roundNumber,
         stage,
-        roundLeader,
         scores,
         roundEndedBy,
         out,
@@ -199,7 +198,6 @@ function Main() {
                     players={players}
                     ready={ready}
                     roundEndedBy={roundEndedBy}
-                    roundLeader={roundLeader}
                     stage={stage}
                     winners={winners}
                 />

@@ -18,7 +18,6 @@ export interface GameBoardProps {
     players: PlayerId[];
     playerId: PlayerId | null;
     stage: GAME_STAGE;
-    roundLeader: PlayerId | null;
     discard: Record<PlayerId, Card[]>;
     onOpenPickFromDiscardDialog: () => void;
     roundEndedBy: GameState['roundEndedBy'];
@@ -163,7 +162,6 @@ function GameBoard(props: GameBoardProps) {
         players,
         stage,
         discard,
-        roundLeader,
         onOpenPickFromDiscardDialog,
         winners,
         roundEndedBy,
@@ -193,7 +191,6 @@ function GameBoard(props: GameBoardProps) {
             cardCounts={cardCounts}
             className='game-board'
             disabled={out}
-            leader={roundLeader}
             players={players}
             showEmpty={stage === GAME_STAGE.SETTING_UP}
         >
