@@ -14,6 +14,9 @@ ReactDOM.render(
                 vertical: 'top',
                 horizontal: 'left',
             }}
+            classes={{
+                containerRoot: 'snackbar__root',
+            }}
             dense={true}
             maxSnack={1}
         >

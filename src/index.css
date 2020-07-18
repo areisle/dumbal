@@ -17,3 +17,9 @@ html {
 .MuiDialogTitle-root {
     text-align: center;
 }
+
+/* these are set with !important in notistack; the html was also required to up the specificity */
+html .snackbar__root {
+    right: unset !important;
+    width: auto !important;
+}
