@@ -2,6 +2,7 @@ import './Board.scss';
 
 import useComponentSize from '@rehooks/component-size';
 import clsx from 'clsx';
+import without from 'lodash.without';
 import React, { ReactNode, useMemo, useRef } from 'react';
 
 import { GameState, MAX_NUMBER_OF_PLAYERS, PlayerId } from '../../types';
@@ -105,6 +106,7 @@ function Board(props: BoardProps) {
 
     const boardRef = useRef<HTMLDivElement | null>(null);
     const boardSize = useComponentSize(boardRef);
+    const playersStillIn = useMemo(() => without(players, ...disabled), [disabled, players]);
 
     const avatars = useMemo(() => (new Array(totalPlayers)).fill(null).map((_, i) => {
         const playerId = players[i];
@@ -122,11 +124,11 @@ function Board(props: BoardProps) {
                 {children?.({
                     isActive,
                     playerId,
-                    isPreviouslyActivePlayer: nextPlayerId(players, playerId) === activePlayer,
+                    isPreviouslyActivePlayer: nextPlayerId(playersStillIn, playerId) === activePlayer,
                 })}
             </PlayerAvatar>
         );
-    }), [activePlayer, cardCounts, children, disabled, players, totalPlayers]);
+    }), [activePlayer, cardCounts, children, disabled, players, playersStillIn, totalPlayers]);
 
     const styles = useMemo(() => getGridProperties(
         boardSize.width,

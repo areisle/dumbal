@@ -1,6 +1,7 @@
 import './Main.scss';
 
 import { Button } from '@material-ui/core';
+import without from 'lodash.without';
 import { useSnackbar } from 'notistack';
 import React, {
     useCallback, useEffect,
@@ -71,11 +72,11 @@ function Main() {
     const gameWinner = useMemo(() => getOverallWinner(players, scores), [players, scores]);
 
     const pickableDiscard = useMemo(() => {
-        if (!players.length) {
+        if (!players.length || out.includes(playerId as PlayerId)) {
             return [];
         }
-        return discard[getPreviousPlayer(players, playerId)] ?? [];
-    }, [discard, playerId, players]);
+        return discard[getPreviousPlayer(without(players, ...out), playerId)] ?? [];
+    }, [discard, out, playerId, players]);
 
     const allPlayersIn = useCallback(() => {
         socket?.emitForGame(USER_EVENTS.START_GAME);
