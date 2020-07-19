@@ -75,7 +75,7 @@ const newGameWithPlayers = async (players: string[], dontStart = false) => {
         nextClients[playerId] = await getClient();
     }
     const client = nextClients[players[0]];
-    const nextGameId = await client.emit(USER_EVENTS.CREATE_GAME);
+    const nextGameId = await client.emit(USER_EVENTS.CREATE_GAME, 100);
     // add everybody to game
     for (const playerId of players) {
         await nextClients[playerId].emit(USER_EVENTS.JOIN_GAME, nextGameId, playerId);
@@ -102,14 +102,14 @@ describe('creating a game', () => {
     });
 
     it('should return gameId when creating a new game', async () => {
-        const gameId = await client.emit(USER_EVENTS.CREATE_GAME);
+        const gameId = await client.emit(USER_EVENTS.CREATE_GAME, 100);
         expect(gameId).toBeTruthy();
         expect(typeof gameId).toBe('string');
     });
 
     it('should create different gameId for every new game', async () => {
-        const gameId1 = await client.emit(USER_EVENTS.CREATE_GAME);
-        const gameId2 = await client.emit(USER_EVENTS.CREATE_GAME);
+        const gameId1 = await client.emit(USER_EVENTS.CREATE_GAME, 100);
+        const gameId2 = await client.emit(USER_EVENTS.CREATE_GAME, 100);
         expect(gameId1).not.toEqual(gameId2);
         await new Game(server.db, gameId1).db.deleteGame();
         await new Game(server.db, gameId2).db.deleteGame();
@@ -124,7 +124,7 @@ describe(GAME_STAGE.SETTING_UP, () => {
     beforeEach(async () => {
         clients.any = await getClient();
         client = clients.any;
-        gameId = await client.emit(USER_EVENTS.CREATE_GAME);
+        gameId = await client.emit(USER_EVENTS.CREATE_GAME, 100);
         game = new Game(server.db, gameId);
     });
 
