@@ -164,7 +164,7 @@ describe(GAME_STAGE.SETTING_UP, () => {
         await client.emit(USER_EVENTS.JOIN_GAME, gameId, 'creisle');
 
         const state = await client.emit(USER_EVENTS.GET_STATE, gameId, 'areisle');
-        expect(state).toEqual({
+        expect(state).toEqual(expect.objectContaining({
             players: [
                 'areisle',
                 'creisle',
@@ -186,7 +186,7 @@ describe(GAME_STAGE.SETTING_UP, () => {
                 areisle: [],
                 creisle: [],
             },
-        });
+        }));
     });
 });
 
@@ -260,11 +260,13 @@ describe(GAME_STAGE.PLAYING_CARDS, () => {
             cards: cardsToPlay,
             playerId: 'creisle',
             stage: GAME_STAGE.PICKING_CARD,
+            count: 4,
         });
         expect(otherResponse).toEqual({
             cards: cardsToPlay,
             playerId: 'creisle',
             stage: GAME_STAGE.PICKING_CARD,
+            count: 4,
         });
     });
 
