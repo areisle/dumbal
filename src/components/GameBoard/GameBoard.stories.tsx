@@ -17,6 +17,8 @@ export const SettingUp = (props: GameBoardProps) => (
 SettingUp.args = {
     players: [],
     stage: GAME_STAGE.SETTING_UP,
+    out: [],
+    discard: {},
 };
 
 export const PlayingCards = (props: GameBoardProps) => (
@@ -24,6 +26,7 @@ export const PlayingCards = (props: GameBoardProps) => (
         {...props}
         activePlayer='creisle'
         discard={{}}
+        out={[]}
         playerId='areisle'
         players={['areisle', 'creisle', 'nreisle']}
         stage={GAME_STAGE.PLAYING_CARDS}
@@ -35,6 +38,7 @@ export const PlayingCardsAsCurrentPlayer = (props: GameBoardProps) => (
         {...props}
         activePlayer='areisle'
         discard={{}}
+        out={[]}
         playerId='areisle'
         players={['areisle', 'creisle', 'nreisle']}
         stage={GAME_STAGE.PLAYING_CARDS}
@@ -52,6 +56,7 @@ export const PickingCard = (props: GameBoardProps) => (
                 { suit: SUIT.CLUBS, number: 9 },
             ],
         }}
+        out={[]}
         playerId='areisle'
         players={['areisle', 'creisle', 'nreisle']}
         stage={GAME_STAGE.PICKING_CARD}
@@ -68,6 +73,7 @@ export const PickingCardCurrentPlayer = (props: GameBoardProps) => (
                 { suit: SUIT.DIAMONDS, number: 13 },
             ],
         }}
+        out={[]}
         playerId='areisle'
         players={['areisle', 'creisle', 'nreisle']}
         stage={GAME_STAGE.PICKING_CARD}
@@ -84,9 +90,10 @@ export const PickingCardDiscard5 = (props: GameBoardProps) => (
                 { suit: SUIT.DIAMONDS, number: 12 },
                 { suit: SUIT.CLUBS, number: 11 },
                 { suit: SUIT.SPADES, number: 10 },
-                { suit: SUIT.DIAMONDS, number: 19 },
+                { suit: SUIT.DIAMONDS, number: 1 },
             ],
         }}
+        out={[]}
         playerId='areisle'
         players={['areisle', 'creisle', 'nreisle']}
         stage={GAME_STAGE.PICKING_CARD}
@@ -104,6 +111,7 @@ export const PickingCardDiscard3 = (props: GameBoardProps) => (
                 { suit: SUIT.CLUBS, number: 11 },
             ],
         }}
+        out={[]}
         playerId='areisle'
         players={['areisle', 'creisle', 'nreisle']}
         stage={GAME_STAGE.PICKING_CARD}
@@ -122,8 +130,28 @@ export const PickingCardDiscard4 = (props: GameBoardProps) => (
                 { suit: SUIT.CLUBS, number: 10 },
             ],
         }}
+        out={[]}
         playerId='areisle'
         players={['areisle', 'creisle', 'nreisle']}
         stage={GAME_STAGE.PICKING_CARD}
+    />
+);
+
+export const PlayingCardDiscard4 = (props: GameBoardProps) => (
+    <GameBoard
+        {...props}
+        activePlayer='areisle'
+        discard={{
+            nreisle: [
+                { suit: SUIT.HEARTS, number: 13 },
+                { suit: SUIT.DIAMONDS, number: 12 },
+                { suit: SUIT.CLUBS, number: 11 },
+                { suit: SUIT.CLUBS, number: 10 },
+            ],
+        }}
+        out={[]}
+        playerId='areisle'
+        players={['areisle', 'creisle', 'nreisle']}
+        stage={GAME_STAGE.PLAYING_CARDS}
     />
 );

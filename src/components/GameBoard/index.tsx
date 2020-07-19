@@ -3,13 +3,15 @@ import './index.scss';
 
 import { Button, Typography } from '@material-ui/core';
 import { Done } from '@material-ui/icons';
-import clsx from 'clsx';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import {
-    Card, GAME_STAGE, GameState, PlayerId,
+    Card,
+    GAME_STAGE, GameState, PlayerId,
 } from '../../types';
+import { getCardName } from '../../utilities';
 import { Board, BoardChildRenderProps } from '../Board';
+import { CardSelector } from '../CardSelector';
 import { LoserIcon, TrophyIcon } from '../icons';
 import { PlayingCardsSet } from '../PlayingCardsSet';
 
@@ -19,12 +21,12 @@ export interface GameBoardProps {
     playerId: PlayerId | null;
     stage: GAME_STAGE;
     discard: Record<PlayerId, Card[]>;
-    onOpenPickFromDiscardDialog: () => void;
-    roundEndedBy: GameState['roundEndedBy'];
-    winners: PlayerId[];
-    ready: GameState['ready'];
+    onPickFromDiscard?: (card: Card) => void;
+    roundEndedBy?: GameState['roundEndedBy'];
+    winners?: PlayerId[];
+    ready?: GameState['ready'];
     out: PlayerId[];
-    cardCounts: GameState['cardCounts'];
+    cardCounts?: GameState['cardCounts'];
 }
 
 interface AvatarContentProps extends BoardChildRenderProps {
@@ -35,7 +37,7 @@ interface AvatarContentProps extends BoardChildRenderProps {
      * if the active player is the main player, the action buttons should be visible/clickable
      */
     showActions: boolean;
-    onClick: any;
+    onPickFromDiscard?: (card: Card) => void;
     isWinner: boolean;
     isLoser: boolean;
     ready: boolean;
@@ -54,15 +56,36 @@ const AvatarContent = (props: AvatarContentProps) => {
         isPreviouslyActivePlayer,
         cards,
         showActions,
-        onClick,
+        onPickFromDiscard,
         isWinner,
         isLoser,
         ready,
         showReady,
     } = props;
 
+    const allowPickFromDiscard = (
+        stage === GAME_STAGE.PICKING_CARD
+        && isPreviouslyActivePlayer
+        && showActions
+    );
+
+    const [discardOpen, setDiscardOpen] = useState(false);
+    const [selectedCard, setSelectedCard] = useState<Card | null>(null);
+
+    useEffect(() => {
+        setSelectedCard(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [cards]);
+
+    const handleCardSelected = (card: Card) => {
+        setDiscardOpen(true);
+        if (allowPickFromDiscard) {
+            setSelectedCard(card);
+        }
+    };
+
     let content: JSX.Element | null = null;
-    if (stage === GAME_STAGE.SETTING_UP) {
+    if (stage === GAME_STAGE.SETTING_UP && playerId) {
         content = (
             <Typography>{playerId}</Typography>
         );
@@ -90,12 +113,12 @@ const AvatarContent = (props: AvatarContentProps) => {
                 is picking up....
             </Typography>
         );
-    } else if (stage === GAME_STAGE.PICKING_CARD && isPreviouslyActivePlayer && showActions) {
+    } else if (allowPickFromDiscard) {
         content = (
             <Button
                 color='primary'
                 disabled={!cards?.length}
-                onClick={onClick}
+                onClick={() => cards && handleCardSelected(cards[0])}
                 size='small'
                 variant='contained'
             >
@@ -105,7 +128,7 @@ const AvatarContent = (props: AvatarContentProps) => {
     } else if (stage === GAME_STAGE.BETWEEN_ROUNDS && showReady && ready) {
         content = (
             <>
-                {isCurrent ? 'you\'re ready' : `${playerId} is ready`}
+                <Typography>{isCurrent ? 'you\'re ready' : `${playerId} is ready`}</Typography>
                 <Done
                     fontSize='large'
                     style={{
@@ -139,20 +162,42 @@ const AvatarContent = (props: AvatarContentProps) => {
         && !showReady
     ) {
         content = (
-            <PlayingCardsSet
-                cards={cards}
-                className={clsx(
-                    'game-board__avatar-content',
-                    `game-board__avatar-content--${cards.length}-cards`,
-                )}
-                size='flexible'
-            >
-                {content}
-            </PlayingCardsSet>
+            <>
+                <PlayingCardsSet
+                    cards={cards}
+                    onCardClick={(e, card) => handleCardSelected(card)}
+                >
+                    {content}
+                </PlayingCardsSet>
+                <CardSelector
+                    cards={cards}
+                    footer={allowPickFromDiscard && (
+                        <Button
+                            color='primary'
+                            disabled={!selectedCard}
+                            onClick={() => selectedCard && onPickFromDiscard?.(selectedCard)}
+                            size='small'
+                            variant='contained'
+                        >
+                            {selectedCard ? `Select ${getCardName(selectedCard)}` : 'No Card Selected'}
+                        </Button>
+                    )}
+                    onCardClicked={handleCardSelected}
+                    onClose={() => setDiscardOpen(false)}
+                    open={discardOpen}
+                    selectable={allowPickFromDiscard}
+                    selected={selectedCard ? [selectedCard] : []}
+                    variant='grid'
+                />
+            </>
         );
     }
 
-    return content;
+    return (
+        <div className='game-board__avatar-content'>
+            {content}
+        </div>
+    );
 };
 
 function GameBoard(props: GameBoardProps) {
@@ -162,12 +207,12 @@ function GameBoard(props: GameBoardProps) {
         players,
         stage,
         discard,
-        onOpenPickFromDiscardDialog,
-        winners,
+        onPickFromDiscard,
+        winners = [],
         roundEndedBy,
-        ready,
+        ready = {},
         out,
-        cardCounts,
+        cardCounts = {},
     } = props;
 
     const renderContent = useCallback((childProps: BoardChildRenderProps) => (
@@ -177,13 +222,13 @@ function GameBoard(props: GameBoardProps) {
             isCurrent={childProps.playerId === playerId}
             isLoser={!winners.includes(childProps.playerId as PlayerId) && roundEndedBy === childProps.playerId}
             isWinner={winners.includes(childProps.playerId as PlayerId)}
-            onClick={onOpenPickFromDiscardDialog}
+            onPickFromDiscard={onPickFromDiscard}
             ready={Boolean(ready[childProps.playerId as PlayerId])}
             showActions={activePlayer === playerId}
             showReady={Boolean(ready[playerId as PlayerId])}
             stage={stage}
         />
-    ), [activePlayer, discard, onOpenPickFromDiscardDialog, playerId, ready, roundEndedBy, stage, winners]);
+    ), [activePlayer, discard, onPickFromDiscard, playerId, ready, roundEndedBy, stage, winners]);
 
     return (
         <Board

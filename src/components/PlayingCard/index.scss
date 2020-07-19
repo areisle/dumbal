@@ -1,46 +1,20 @@
 .playing-card {
     background-color: white;
-    border: 5px solid black;
-    border-radius: 5px;
+    border: 3px solid black;
+    border-radius: 3px;
     display: grid;
-    font-size: 1.5rem;
+    font-size: 1em;
     grid-template-areas:
-        'marker-1 . .'
-        'center center center'
-        '. . marker-2';
-    grid-template-columns: min-content 1fr min-content;
-    grid-template-rows: min-content 1fr min-content;
+        'marker-1 .'
+        'center center'
+        '. marker-2';
+    grid-template-columns: repeat(2, 50%);
+    grid-template-rows: 1fr min-content 1fr;
+
     text-align: center;
 
-    &--medium {
-        height: 15rem;
-        width: 8.75rem;
-    }
-
-    &--large {
-        font-size: 2.5rem;
-        height: 22.5rem;
-        width: 13.125rem;
-    }
-
-    &--large#{&}--stacked {
-        font-size: 2rem;
-    }
-
-    &--flexible {
-        height: var(--flexible-card-height, 100%);
-        width: var(--flexible-card-width, 60%);
-
-        .marker {
-            width: 100%;
-            height: 100%;
-            padding: 5px;
-        }
-    }
-
-    &--flexible#{&}--stacked {
-        font-size: clamp(0.5rem, calc(var(--flexible-card-width) * 0.225), 1.75rem);
-    }
+    height: 100%;
+    width: 100%;
 
     &--selected {
         box-shadow: 0 0 0 3px rgb(0, 183, 255);
@@ -48,15 +22,34 @@
 
     .marker:first-of-type {
         grid-area: marker-1;
+        justify-self: self-start;
+        align-self: self-start;
     }
 
     .marker:last-of-type {
         grid-area: marker-2;
         transform: rotate(180deg);
+        justify-self: self-end;
+        align-self: self-end;
     }
 
     &__content {
         grid-area: center;
+    }
+
+    &--stacked {
+        grid-template-areas:
+            'marker-1'
+            'center'
+            '.';
+        grid-template-columns: 1fr;
+
+        .marker:last-of-type {
+            display: none;
+        }
+
+        // force borders to overlap
+        margin-right: -5px;
     }
 }
 
@@ -64,14 +57,17 @@
     align-items: center;
     color: black;
     display: flex;
-    height: 2.5em;
     justify-content: center;
     text-shadow: none;
-    width: 2.5em;
+    font-size: 1em;
+    padding: 2px;
 
-    &--small {
-        height: 2em;
-        width: 2em;
-        font-size: 0.75em;
+
+    @media (min-width: 600px) {
+        padding: 5px;
+    }
+
+    .suit-icon {
+        font-size: 60%;
     }
 }

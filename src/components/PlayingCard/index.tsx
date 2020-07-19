@@ -9,18 +9,12 @@ import { SuitIcon } from '../icons';
 
 export interface PlayingCardProps extends Card {
     /**
-     * how big the card should be
-     * @default medium
-     */
-    size?: 'medium' | 'large' | 'flexible';
-    /**
      * whether the card is currently selected
      * @default false
      */
     selected?: boolean;
     onClick?: HTMLProps<HTMLDivElement>['onClick'];
     children?: HTMLProps<HTMLDivElement>['children'];
-    stacked?: boolean;
 }
 
 function Marker(props: Card & { small?: boolean }) {
@@ -40,28 +34,25 @@ function Marker(props: Card & { small?: boolean }) {
 
 function PlayingCard(props: PlayingCardProps) {
     const {
-        size = 'medium',
         suit,
         number,
         selected,
         children,
-        stacked,
         ...rest
     } = props;
 
     return (
         <div
             {...rest}
-            className={clsx(`playing-card playing-card--${size}`, {
+            className={clsx('playing-card', {
                 'playing-card--selected': selected,
-                'playing-card--stacked': stacked,
             })}
         >
-            <Marker number={number} small={stacked} suit={suit} />
+            <Marker number={number} suit={suit} />
             <div className='playing-card__content'>
                 {children}
             </div>
-            <Marker number={number} small={stacked} suit={suit} />
+            <Marker number={number} suit={suit} />
         </div>
     );
 }

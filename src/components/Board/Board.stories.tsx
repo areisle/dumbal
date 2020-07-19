@@ -17,11 +17,13 @@ WithEmpty.args = {
     showEmpty: true,
     players: ['areisle', 'creisle'],
     disabled: [],
+    cardCounts: {},
 };
 
 export const TwoPlayers = (props: BoardProps) => (
     <Board
         {...props}
+        cardCounts={{}}
         disabled={[]}
         players={['areisle', 'creisle']}
     />
@@ -30,6 +32,7 @@ export const TwoPlayers = (props: BoardProps) => (
 export const ThreePlayers = (props: BoardProps) => (
     <Board
         {...props}
+        cardCounts={{}}
         disabled={[]}
         players={['areisle', 'creisle', 'nreisle']}
     />
@@ -38,6 +41,7 @@ export const ThreePlayers = (props: BoardProps) => (
 export const FourPlayers = (props: BoardProps) => (
     <Board
         {...props}
+        cardCounts={{}}
         disabled={[]}
         players={['areisle', 'creisle', 'nreisle', 'mreisle']}
     />
@@ -46,6 +50,7 @@ export const FourPlayers = (props: BoardProps) => (
 export const FivePlayers = (props: BoardProps) => (
     <Board
         {...props}
+        cardCounts={{}}
         disabled={[]}
         players={['areisle', 'creisle', 'nreisle', 'mreisle', 'kreisle']}
     />
@@ -54,6 +59,7 @@ export const FivePlayers = (props: BoardProps) => (
 export const SixPlayers = (props: BoardProps) => (
     <Board
         {...props}
+        cardCounts={{}}
         disabled={[]}
         players={['areisle', 'creisle', 'nreisle', 'mreisle', 'kreisle', 'freisle']}
     />

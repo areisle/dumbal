@@ -10,12 +10,13 @@
     grid-template-rows: min-content 1fr min-content #{$card-deck__height--closed};
     grid-template-columns: 1fr;
     justify-content: center;
-    padding: 5px 50px;
+    padding: 5px 10px;
     max-height: 100vh;
     position: relative;
 
     .game-header {
         grid-area: header;
+        padding: 0 10px;
     }
 
     .game-footer {

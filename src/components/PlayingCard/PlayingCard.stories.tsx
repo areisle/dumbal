@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { Constrained } from '../../decorators';
 import { SUIT } from '../../types';
 import { TrophyIcon } from '../icons';
 import { PlayingCard, PlayingCardProps } from '.';
@@ -23,28 +24,6 @@ export const Selected = (props: PlayingCardProps) => (
     <PlayingCard
         {...props}
         selected={true}
-    />
-);
-
-export const Large = (props: PlayingCardProps) => (
-    <PlayingCard
-        {...props}
-        size='large'
-    />
-);
-
-export const LargeAndStacked = (props: PlayingCardProps) => (
-    <PlayingCard
-        {...props}
-        size='large'
-        stacked={true}
-    />
-);
-
-export const FlexibleSize = (props: PlayingCardProps) => (
-    <PlayingCard
-        {...props}
-        size='flexible'
     />
 );
 
@@ -87,3 +66,23 @@ export const Jack = (props: PlayingCardProps) => (
         suit={SUIT.DIAMONDS}
     />
 );
+
+export const SmallScreen = (props: PlayingCardProps) => (
+    <PlayingCard
+        {...props}
+        number={11}
+        suit={SUIT.DIAMONDS}
+    />
+);
+
+SmallScreen.decorators = [Constrained(150, 150)];
+
+export const VerySmallScreen = (props: PlayingCardProps) => (
+    <PlayingCard
+        {...props}
+        number={11}
+        suit={SUIT.DIAMONDS}
+    />
+);
+
+VerySmallScreen.decorators = [Constrained(100, 100)];

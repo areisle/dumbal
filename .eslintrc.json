@@ -15,6 +15,13 @@
         ],
         "max-classes-per-file": "off",
         "max-len": "warn",
+        "import/no-extraneous-dependencies": ["error", {
+            "devDependencies": [
+                ".storybook/**",
+                "**/*.stories.*",
+                "**/*.test.*"
+            ]
+        }],
         "no-param-reassign": "off",
         "no-restricted-syntax": ["error", "WithStatement", "BinaryExpression[operator=' in ']"],
         "no-unused-expressions": "off",

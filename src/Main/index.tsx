@@ -1,7 +1,6 @@
 import './Main.scss';
 
 import { Button } from '@material-ui/core';
-import without from 'lodash.without';
 import { useSnackbar } from 'notistack';
 import React, {
     useCallback, useEffect,
@@ -26,8 +25,10 @@ import {
 } from '../types';
 import {
     getCardName,
-    getCardsTotal, getOverallWinner,
-    getPlayerNumber, getPreviousPlayer, getRoundWinners,
+    getCardsTotal,
+    getOverallWinner,
+    getPlayerNumber,
+    getRoundWinners,
 } from '../utilities';
 import { gameReducer, initialState, logger } from './reducer';
 import { useSocket } from './useSocket';
@@ -62,21 +63,12 @@ function Main() {
     } = state;
 
     const [scoreboardOpen, openScoreboard, closeScoreboard] = useBoolean(false);
-    const [deckOpen, openPlayerDeck, closePlayerDeck] = useBoolean(false);
-    const [discardOpen, openDiscard, closeDiscard] = useBoolean(false);
 
     const socket = useSocket(gameId, playerId, dispatch);
 
     const winners = useMemo(() => getRoundWinners(players, roundNumber, scores), [players, roundNumber, scores]);
 
     const gameWinner = useMemo(() => getOverallWinner(players, scores), [players, scores]);
-
-    const pickableDiscard = useMemo(() => {
-        if (!players.length || out.includes(playerId as PlayerId)) {
-            return [];
-        }
-        return discard[getPreviousPlayer(without(players, ...out), playerId)] ?? [];
-    }, [discard, out, playerId, players]);
 
     const allPlayersIn = useCallback(() => {
         socket?.emitForGame(USER_EVENTS.START_GAME);
@@ -137,7 +129,7 @@ function Main() {
         });
     }, [enqueueSnackbar, socket]);
 
-    const handlePickFromDiscard = useCallback(([card]: Card[]) => {
+    const handlePickFromDiscard = useCallback((card: Card) => {
         socket?.emitForPlayer(USER_EVENTS.PICK_CARD_FROM_DISCARD, card);
     }, [socket]);
 
@@ -193,7 +185,7 @@ function Main() {
                     activePlayer={activePlayer}
                     cardCounts={cardCounts}
                     discard={discard}
-                    onOpenPickFromDiscardDialog={openDiscard}
+                    onPickFromDiscard={handlePickFromDiscard}
                     out={out}
                     playerId={playerId}
                     players={players}
@@ -219,32 +211,12 @@ function Main() {
             />
             {/* your hand */}
             <PlayerDeck
-                actionLabel='Play'
-                allowSelectMultiple={true}
                 cards={cards}
-                onClose={closePlayerDeck}
-                onOpen={openPlayerDeck}
-                onPickCards={handlePlayCards}
-                open={deckOpen}
-                showPickAction={(
-                    activePlayer === playerId
+                onSelectCards={handlePlayCards}
+                selectable={(
+                    playerId === activePlayer
                     && stage === GAME_STAGE.PLAYING_CARDS
                 )}
-                visibleWhenClosed={true}
-            />
-            {/* discard */}
-            <PlayerDeck
-                actionLabel='Pick'
-                allowSelectMultiple={false}
-                cards={pickableDiscard}
-                onClose={closeDiscard}
-                onPickCards={handlePickFromDiscard}
-                open={discardOpen}
-                showPickAction={(
-                    activePlayer === playerId
-                    && stage === GAME_STAGE.PICKING_CARD
-                )}
-                visibleWhenClosed={false}
             />
             <Menu
                 onClose={closeScoreboard}

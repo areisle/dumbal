@@ -3,22 +3,22 @@ import './index.scss';
 import clsx from 'clsx';
 import React, { ReactNode, useMemo } from 'react';
 
-import { GameState } from '../../types';
-import { cardKey } from '../../utilities';
+import { Card, GameState } from '../../types';
+import { cardKey, includesCards } from '../../utilities';
 import { PlayingCard } from '../PlayingCard';
 
 export interface PlayingCardsSetProps {
     cards: GameState['cards'];
-    selected?: number[];
-    onCardClick?: (e: React.MouseEvent, index: number) => void;
+    selected?: Card[];
+    onCardClick?: (e: React.MouseEvent, card: Card) => void;
     onClick?: (e: React.MouseEvent | React.KeyboardEvent) => void;
-    /**
-     * @default 'medium'
-     */
-    size?: 'medium' | 'large' | 'flexible';
     children?: ReactNode;
     className?: string;
     clipped?: boolean;
+    /**
+     * @default 'stacked'
+     */
+    variant?: 'stacked' | 'grid';
 }
 
 function PlayingCardsSet(props: PlayingCardsSetProps) {
@@ -26,14 +26,13 @@ function PlayingCardsSet(props: PlayingCardsSetProps) {
         cards,
         selected = [],
         onCardClick,
-        size = 'medium',
         children,
         className = '',
-        clipped = false,
         onClick,
+        variant = 'stacked',
     } = props;
 
-    const playingCards = useMemo(() => cards.map((card, i) => (
+    const playingCards = useMemo(() => cards.map((card) => (
         <div
             key={cardKey(card)}
             className='playing-cards-set__card-wrapper'
@@ -41,18 +40,20 @@ function PlayingCardsSet(props: PlayingCardsSetProps) {
             <PlayingCard
                 {...card}
                 onClick={(e) => {
-                onCardClick?.(e, i);
+                    onCardClick?.(e, card);
                 }}
-                selected={selected.includes(i)}
-                size={size}
-                stacked={cards.length > 1 || clipped}
+                selected={includesCards(selected, [card])}
             />
         </div>
-    )), [cards, clipped, onCardClick, selected, size]);
+    )), [cards, onCardClick, selected]);
 
     return (
         <div
-            className={clsx(['playing-cards-set', className, `playing-cards-set--${size}`], { 'playing-cards-set--clipped': clipped })}
+            className={clsx(
+                'playing-cards-set',
+                `playing-cards-set--${variant}`,
+                className,
+            )}
             onClick={onClick}
             onKeyPress={onClick}
             role='button'

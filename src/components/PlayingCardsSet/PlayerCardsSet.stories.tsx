@@ -1,6 +1,7 @@
 import { Button } from '@material-ui/core';
 import React from 'react';
 
+import { Constrained } from '../../decorators';
 import { SUIT } from '../../types';
 import { PlayingCardsSet, PlayingCardsSetProps } from '.';
 
@@ -8,8 +9,8 @@ const cards = [
     { suit: SUIT.HEARTS, number: 3 },
     { suit: SUIT.DIAMONDS, number: 8 },
     { suit: SUIT.DIAMONDS, number: 13 },
-    { suit: SUIT.CLUBS, number: 4 },
     { suit: SUIT.SPADES, number: 10 },
+    { suit: SUIT.CLUBS, number: 4 },
 ];
 
 export default {
@@ -27,14 +28,6 @@ OneCard.args = {
     cards: cards.slice(0, 1),
 };
 
-export const OneLargeCard = (props: PlayingCardsSetProps) => (
-    <PlayingCardsSet
-        {...props}
-        cards={cards.slice(0, 1)}
-        size='large'
-    />
-);
-
 export const NoCards = (props: PlayingCardsSetProps) => (
     <PlayingCardsSet
         {...props}
@@ -49,19 +42,11 @@ export const ManyCards = (props: PlayingCardsSetProps) => (
     />
 );
 
-export const LargeCards = (props: PlayingCardsSetProps) => (
-    <PlayingCardsSet
-        {...props}
-        cards={cards}
-        size='large'
-    />
-);
-
 export const ManyCardsWithMultipleSelected = (props: PlayingCardsSetProps) => (
     <PlayingCardsSet
         {...props}
         cards={cards}
-        selected={[1, 3, 4]}
+        selected={[cards[0], cards[2], cards[3]]}
     />
 );
 
@@ -105,14 +90,38 @@ export const Stressed = (props: PlayingCardsSetProps) => (
     />
 );
 
-export const Flexible = (props: PlayingCardsSetProps) => (
+export const SmallScreen = (props: PlayingCardsSetProps) => (
     <PlayingCardsSet
         {...props}
         cards={cards}
-        size='flexible'
     />
 );
 
-const Square = (storyFn: any) => <div style={{ '--flexible-card-width': '200px', '--flexible-card-height': '500px' } as React.CSSProperties}>{storyFn()}</div>;
+SmallScreen.decorators = [Constrained(150, 150)];
 
-Flexible.decorators = [Square];
+export const VerySmallScreen = (props: PlayingCardsSetProps) => (
+    <PlayingCardsSet
+        {...props}
+        cards={cards}
+    />
+);
+
+VerySmallScreen.decorators = [Constrained(100, 100)];
+
+export const Grid = (props: PlayingCardsSetProps) => (
+    <PlayingCardsSet
+        {...props}
+        cards={cards}
+        variant='grid'
+    />
+);
+
+export const GridSmallScreen = (props: PlayingCardsSetProps) => (
+    <PlayingCardsSet
+        {...props}
+        cards={cards}
+        variant='grid'
+    />
+);
+
+GridSmallScreen.decorators = [Constrained(150, 150)];
