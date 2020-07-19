@@ -5,7 +5,6 @@ import {
     GAME_STAGE,
     GameState,
     MAX_NUMBER_OF_PLAYERS,
-    MAX_NUMBER_OF_POINTS,
     PlayerId,
 } from '../src/types';
 import {
@@ -200,15 +199,17 @@ class Player {
         const [
             scoresByPlayerId,
             players,
+            pointsLimit,
         ] = await Promise.all([
             this.db.getTotalScores(),
             this.db.getPlayers(),
+            this.db.getPointsLimit(),
         ]);
 
         const playersOut: PlayerId[] = [];
         for (const pId of players) {
             // @todo points
-            if (scoresByPlayerId[pId] >= MAX_NUMBER_OF_POINTS) {
+            if (scoresByPlayerId[pId] >= pointsLimit) {
                 playersOut.push(pId);
             }
         }
@@ -314,12 +315,13 @@ class Player {
         ]);
 
         // @note I think I hit the limit for Promise.alls typescript definition
-        const [stillIn, cardCounts] = await Promise.all([
+        const [stillIn, cardCounts, limit] = await Promise.all([
             this.db.getPlayersStillIn(),
             this.db.forEachPlayerStillIn(async (pId) => {
                 const playerCards = await this.db.getPlayerCards(pId);
                 return playerCards.length;
             }),
+            this.db.getPointsLimit(),
         ]);
 
         return {
@@ -337,6 +339,7 @@ class Player {
             stage,
             out: without(players, ...stillIn),
             cardCounts,
+            limit,
         };
     }
 }

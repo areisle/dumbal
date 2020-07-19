@@ -19,6 +19,7 @@ export interface RoundCompleteDialogProps extends DialogProps {
     roundNumber: number;
     players: PlayerId[];
     scores: GameState['scores'];
+    limit: number;
 }
 
 function RoundCompleteDialog(props: RoundCompleteDialogProps) {
@@ -28,6 +29,7 @@ function RoundCompleteDialog(props: RoundCompleteDialogProps) {
         players,
         scores,
         roundEndedBy,
+        limit,
         ...rest
     } = props;
 
@@ -66,6 +68,7 @@ function RoundCompleteDialog(props: RoundCompleteDialogProps) {
                     </Typography>
                 )}
                 <ScoreBoard
+                    limit={limit}
                     players={players}
                     roundNumber={roundNumber}
                     scores={scores}

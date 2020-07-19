@@ -14,7 +14,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { GameState } from '../../types';
 import { getTotalScores } from '../../utilities';
 
-export interface ScoreBoardProps extends Pick<GameState, 'scores' | 'players' | 'roundNumber' | 'stage'> {
+export interface ScoreBoardProps extends Pick<GameState, 'scores' | 'players' | 'roundNumber' | 'stage' | 'limit'> {
     allowSelectRound?: boolean;
 }
 
@@ -24,6 +24,7 @@ function ScoreBoard(props: ScoreBoardProps) {
         players,
         allowSelectRound = false,
         scores,
+        limit,
     } = props;
 
     const [selectedRound, setSelectedRound] = useState(roundNumber);
@@ -50,6 +51,10 @@ function ScoreBoard(props: ScoreBoardProps) {
             </TableCell>
             <TableCell align='right'>
                 {totalScores[playerId]}
+                {' '}
+                /
+                {' '}
+                {limit}
             </TableCell>
         </TableRow>
     ));

@@ -16,7 +16,7 @@ import { GameState } from '../../types';
 import { Rules } from '../Rules';
 import { ScoreBoard } from '../ScoreBoard';
 
-interface MenuProps extends Pick<GameState, 'stage' | 'scores' | 'players' | 'roundNumber'> {
+interface MenuProps extends Pick<GameState, 'stage' | 'scores' | 'players' | 'roundNumber' | 'limit'> {
     open: boolean;
     onClose: () => void;
     onRefreshData: () => void;
@@ -36,6 +36,7 @@ function Menu(props: MenuProps) {
         players,
         roundNumber,
         onRefreshData,
+        limit,
     } = props;
 
     const [activeTab, setActiveTab] = useState(TAB.SCORES);
@@ -73,6 +74,7 @@ function Menu(props: MenuProps) {
                 {(activeTab === TAB.SCORES) && (
                     <ScoreBoard
                         allowSelectRound={true}
+                        limit={limit}
                         players={players}
                         roundNumber={roundNumber}
                         scores={scores}

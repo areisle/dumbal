@@ -3,6 +3,7 @@ import shortid from 'shortid';
 
 import {
     Card,
+    DEFAULT_MAX_NUMBER_OF_POINTS,
     GAME_STAGE,
     GameId,
     GameState,
@@ -32,10 +33,12 @@ class Game {
     /**
      * creates a new game
      */
-    static async create(redis: Redis): Promise<Game> {
+    static async create(redis: Redis, limit: number = DEFAULT_MAX_NUMBER_OF_POINTS): Promise<Game> {
         const gameId = shortid.generate();
         await GameDB.addGame(redis, gameId);
-        return new Game(redis, gameId);
+        const game = new Game(redis, gameId);
+        await game.db.setPointsLimit(limit);
+        return game;
     }
 
     /**

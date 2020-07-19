@@ -47,16 +47,19 @@ const server = async ({ port = 3000 }: { port: string | number }) => {
         // socket, but typed with some extra sugar
         const socket = new TypesafeSocket(redis, io, unwrappedSocket);
 
-        socket.on(USER_EVENTS.CREATE_GAME, async (callback) => {
-            const game = await Game.create(redis);
+        socket.on(USER_EVENTS.CREATE_GAME, async (limit, callback) => {
+            const game = await Game.create(redis, limit);
             callback?.(game.id);
         });
 
         socket.onPlayerEvent(USER_EVENTS.JOIN_GAME, async (game, player, callback) => {
             await player.join(socket.id);
             socket.join(game.id);
-            const players = await game.getPlayers();
-            callback?.({ playerId: player.id, players });
+            const [players, limit] = await Promise.all([
+                game.getPlayers(),
+                game.db.getPointsLimit(),
+            ]);
+            callback?.({ playerId: player.id, players, limit });
             socket.emitTo(game.id, SERVER_EVENTS.PLAYERS_CHANGED, players);
         });
 
