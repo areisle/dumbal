@@ -1,5 +1,6 @@
 import {
     ClientCallbackParams,
+    DEFAULT_MAX_NUMBER_OF_POINTS,
     GAME_STAGE,
     GameId,
     GameState,
@@ -37,6 +38,7 @@ const initialState: GameState = {
     discard: {},
     out: [],
     cardCounts: {},
+    limit: DEFAULT_MAX_NUMBER_OF_POINTS,
 };
 
 type Handlers = Omit<(
@@ -141,10 +143,9 @@ const handlers: Handlers = {
         ...state,
         gameId,
     }),
-    [USER_EVENTS.JOIN_GAME]: (state, { playerId, players }) => ({
+    [USER_EVENTS.JOIN_GAME]: (state, params) => ({
         ...state,
-        playerId,
-        players,
+        ...params,
     }),
     [USER_EVENTS.GET_STATE]: (_, nextState: GameState) => nextState,
     [USER_EVENTS.GET_PLAYERS]: (state, players: PlayerId[]) => ({

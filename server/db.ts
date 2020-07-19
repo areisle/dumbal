@@ -3,6 +3,7 @@ import { Redis } from 'ioredis';
 
 import {
     Card,
+    DEFAULT_MAX_NUMBER_OF_POINTS,
     GAME_STAGE,
     GameId,
     GameState,
@@ -89,6 +90,14 @@ class GameDB {
             return this.redis.del(`${this.gkey}/round`);
         }
         return this.redis.set(`${this.gkey}/round`, roundNumber);
+    }
+
+    async getPointsLimit() {
+        return (await this.getJSON<number>(`${this.gkey}/points-limit`)) ?? DEFAULT_MAX_NUMBER_OF_POINTS;
+    }
+
+    async setPointsLimit(limit: number) {
+        return this.redis.set(`${this.gkey}/points-limit`, limit);
     }
 
     getActivePlayer(): Promise<PlayerId | null> {

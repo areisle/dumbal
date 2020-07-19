@@ -11,7 +11,7 @@ export enum SUIT {
 
 export const MAX_NUMBER_OF_PLAYERS = 6;
 export const MIN_NUMBER_OF_PLAYERS = 2;
-export const MAX_NUMBER_OF_POINTS = 200;
+export const DEFAULT_MAX_NUMBER_OF_POINTS = 100;
 
 export type GameId = string;
 
@@ -71,6 +71,7 @@ export interface GameState {
     discard: Record<PlayerId, Card[]>;
     out: PlayerId[];
     cardCounts: Record<PlayerId, number>;
+    limit: number;
 }
 
 export enum USER_EVENTS {
@@ -181,14 +182,14 @@ export type ClientCallbackParams = {
     [USER_EVENTS.CREATE_GAME]: GameId;
     [USER_EVENTS.GET_PLAYERS]: PlayerId[];
     [USER_EVENTS.GET_STATE]: GameState;
-    [USER_EVENTS.JOIN_GAME]: { playerId: PlayerId, players: PlayerId[] };
+    [USER_EVENTS.JOIN_GAME]: { playerId: PlayerId, players: PlayerId[], limit: number };
     [USER_EVENTS.PICK_CARD_FROM_DECK]: Card;
     [USER_EVENTS.PICK_CARD_FROM_DISCARD]: Card;
     [USER_EVENTS.REJOIN_GAME]: GameState;
 }
 
 export type ClientEventParamsNoCallbacks = {
-    [USER_EVENTS.CREATE_GAME]: [];
+    [USER_EVENTS.CREATE_GAME]: [number];
     [USER_EVENTS.END_ROUND]: [GameId, PlayerId];
     [USER_EVENTS.GET_PLAYERS]: [GameId];
     [USER_EVENTS.GET_STATE]: [GameId, PlayerId];

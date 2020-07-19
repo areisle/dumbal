@@ -60,6 +60,7 @@ function Main() {
         roundEndedBy,
         out,
         cardCounts,
+        limit,
     } = state;
 
     const [scoreboardOpen, openScoreboard, closeScoreboard] = useBoolean(false);
@@ -102,9 +103,9 @@ function Main() {
 
     const cardsTotal = useMemo(() => getCardsTotal(cards), [cards]);
 
-    const handleStartGame = useCallback((nextGameId = '') => {
+    const handleStartGame = useCallback((nextGameId = '', chosenLimit: number) => {
         if (!nextGameId) {
-            socket?.emit(USER_EVENTS.CREATE_GAME);
+            socket?.emit(USER_EVENTS.CREATE_GAME, chosenLimit);
         } else {
             dispatch({
                 type: USER_EVENTS.CREATE_GAME,
@@ -219,6 +220,7 @@ function Main() {
                 )}
             />
             <Menu
+                limit={limit}
                 onClose={closeScoreboard}
                 onRefreshData={rejoinGame}
                 open={scoreboardOpen}
@@ -236,6 +238,7 @@ function Main() {
                 open={currentDialog === DIALOG_TYPE.START_GAME}
             />
             <RoundCompleteDialog
+                limit={limit}
                 onClose={() => setCurrentDialog(null)}
                 open={currentDialog === DIALOG_TYPE.ROUND_COMPLETE}
                 players={players}
