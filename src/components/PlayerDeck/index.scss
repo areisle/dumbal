@@ -16,9 +16,9 @@
 
         z-index: 2000;
 
-        --card-width: clamp(60px, 26vmin, 180px);
-        --card-height: clamp(100px, 40vmin, 300px);
-        --offset: clamp(30px, 10vmin, 3em);
+        --card-width: max(60px, min(26vmin, 180px));
+        --card-height: max(100px, min(40vmin, 300px));
+        --offset: max(30px, min(10vmin, 120px));
 
         .playing-cards-set {
             --playing-cards-set__cards-overlap-x: calc(var(--card-width) - var(--offset));
@@ -27,7 +27,7 @@
             .playing-card {
                 width: var(--card-width);
                 height: var(--card-height);
-                font-size: clamp(1em, 4vmin, 2em);
+                font-size: unquote("max(1em, min(4vmin, 2em))");
             }
         }
     }
@@ -39,9 +39,9 @@
     }
 
     &__selector {
-        --card-width: clamp(60px, 30vmin, 200px);
-        --card-height: clamp(100px, 55vmin, 360px);
-        --offset: clamp(30px, 10vmin, 3em);
+        --card-width: max(60px, min(30vmin, 200px));
+        --card-height: max(100px, min(55vmin, 360px));
+        --offset: max(30px, min(10vmin, 60px));
 
         .playing-cards-set {
             --playing-cards-set__cards-overlap-x: calc(var(--card-width) - var(--offset));
@@ -50,7 +50,7 @@
             .playing-card {
                 width: var(--card-width);
                 height: var(--card-height);
-                font-size: clamp(1.25em, 5vmin, 2.25em);
+                font-size: unquote("max(1.25em, min(5vmin, 2.25em))");
             }
         }
     }
