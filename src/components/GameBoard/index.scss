@@ -5,7 +5,7 @@
     &__avatar-content {
         width: 100%;
 
-        --offset: clamp(2rem, 10vmin, 100px);
+        --offset: max(2rem, min(10vmin, 100px));
 
         --card-width: calc((var(--grid-square-size) - var(--offset)) * 0.6);
         --card-height: calc((var(--grid-square-size) - var(--offset)));
@@ -17,6 +17,10 @@
             .playing-card {
                 width: var(--card-width);
                 height: var(--card-height);
+            }
+
+            .marker {
+                font-size: unquote("max(1em, min(8vmin, 3em))");
             }
         }
     }

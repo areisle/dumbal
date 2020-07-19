@@ -8,6 +8,8 @@ html, body, .main, #root {
 html {
     box-sizing: border-box;
     min-height: 100vh;
+    /* mobile viewport bug fix */
+    min-height: -webkit-fill-available;
 }
 
 #root {
