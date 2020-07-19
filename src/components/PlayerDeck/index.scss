@@ -1,69 +1,57 @@
 @import '../../variables';
 
-$needs-extra-vertical-space: "(max-aspect-ratio: #{$landscape-min-aspect-ratio}) and (min-aspect-ratio: 1/2)";
+.player-deck {
 
-.playing-cards-deck {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    left: 0;
-    overflow: hidden;
-    position: absolute;
-    top: 0;
-    transition: background-color 0.3s;
-    width: 100%;
-    pointer-events: none;
-    z-index: 50;
+    &__reference {
 
-    &--open {
-        background-color: rgba(0, 0, 0, 0.5);
-        pointer-events: all;
-    }
-
-    &__card-preview {
-        position: relative;
-        align-items: center;
-        display: flex;
-        flex-grow: 1;
-        max-width: 600px;
-        margin: 0 auto;
-
-        &, > * {
-            width: 100%;
-        }
-    }
-
-    .card-preview__wrapper {
-        align-items: center;
-        display: flex;
-        justify-content: center;
-        width: 100%;
-    }
-
-    .avatar {
         position: absolute;
-        bottom: 0;
-        width: 100%;
+        top: calc(100% - 40px);
         left: 0;
+        width: 100%;
         pointer-events: none;
-    }
 
-    &__list {
-        position: relative;
-        pointer-events: all;
-
-        .playing-card {
-            transition: margin-top 0.3s, box-shadow 0.3s;
+        > * {
+            pointer-events: all;
         }
 
+        z-index: 2000;
+
+        --card-width: clamp(60px, 26vmin, 180px);
+        --card-height: clamp(100px, 40vmin, 300px);
+        --offset: clamp(30px, 10vmin, 3em);
+
+        .playing-cards-set {
+            --playing-cards-set__cards-overlap-x: calc(var(--card-width) - var(--offset));
+            --playing-cards-set__cards-overlap-y: calc(var(--card-height) - var(--offset));
+
+            .playing-card {
+                width: var(--card-width);
+                height: var(--card-height);
+                font-size: clamp(1em, 4vmin, 2em);
+            }
+        }
+    }
+
+    &--open &__reference {
         .playing-card--selected {
-            margin-top: -1rem;
+            margin-top: -1em;
         }
-
-        transition: transform 0.3s;
     }
 
-    &--closed &__card-preview {
-        visibility: hidden;
+    &__selector {
+        --card-width: clamp(60px, 30vmin, 200px);
+        --card-height: clamp(100px, 55vmin, 360px);
+        --offset: clamp(30px, 10vmin, 3em);
+
+        .playing-cards-set {
+            --playing-cards-set__cards-overlap-x: calc(var(--card-width) - var(--offset));
+            --playing-cards-set__cards-overlap-y: calc(var(--card-height) - var(--offset));
+
+            .playing-card {
+                width: var(--card-width);
+                height: var(--card-height);
+                font-size: clamp(1.25em, 5vmin, 2.25em);
+            }
+        }
     }
 }

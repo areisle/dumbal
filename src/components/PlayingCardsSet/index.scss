@@ -9,7 +9,17 @@
 
     &__cards {
         display: flex;
-        flex-wrap: wrap;
+    }
+
+    &--grid &__cards {
+        display: grid;
+        grid-template-columns:repeat(2, calc((100% - 10px) / 2));
+        gap: 10px;
+        max-width: 100%;
+
+        @media (min-aspect-ratio: 1/1) {
+            grid-template-columns:repeat(3, calc((100% - 20px) / 3));
+        }
     }
 
     &__actions {
@@ -26,39 +36,20 @@
         }
     }
 
+    // this is so that the z-index applies
     &__card-wrapper {
         position: relative;
     }
 
-    &--clipped &__card-wrapper {
-        height: 2.5em;
-    }
-
-    &__card-wrapper:not(:last-child) {
-        height: 2.5em;
-        width: 2.5em;
-        z-index: 5;
-    }
-
-    &--large &__card-wrapper:not(:last-child) {
-        height: 4em;
-        width: 4em;
-    }
-
-    &--flexible &__cards {
+    &--stacked &__cards {
+        margin-left: var(--playing-cards-set__cards-overlap-x, 1em);
+        margin-top: var(--playing-cards-set__cards-overlap-y, 2em);
         flex-wrap: wrap;
     }
 
-    &--flexible &__card-wrapper:not(:last-child) {
-        width: clamp(1.25em, calc(var(--flexible-card-width) * 0.3), 4em);
-        height: clamp(0.5em, calc(var(--flexible-card-width) * 0.3), 4em);
-        font-size: clamp(0.5em, calc(var(--flexible-card-width) * 0.3), 4em);
-    }
-
-    &--flexible &__card-wrapper:not(:last-child) .playing-card {
-        position: absolute;
-        top: 0;
-        left: 0;
+    &--stacked &__card-wrapper {
+        margin-left: calc(-1 * var(--playing-cards-set__cards-overlap-x, 1em));
+        margin-top: calc(-1 * var(--playing-cards-set__cards-overlap-y, 2em));
     }
 
     &__card-wrapper:last-child {

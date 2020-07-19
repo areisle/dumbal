@@ -4,12 +4,19 @@
 
     &__avatar-content {
         width: 100%;
-        height: 100%;
 
+        --offset: clamp(2rem, 10vmin, 100px);
 
-        &#{&}--4-cards ,&#{&}--5-cards {
-            .playing-cards-set {
-                justify-content: center;
+        --card-width: calc((var(--grid-square-size) - var(--offset)) * 0.6);
+        --card-height: calc((var(--grid-square-size) - var(--offset)));
+
+        .playing-cards-set {
+            --playing-cards-set__cards-overlap-x: calc(var(--card-width) - 2em);
+            --playing-cards-set__cards-overlap-y: calc(var(--card-height) - 2em);
+
+            .playing-card {
+                width: var(--card-width);
+                height: var(--card-height);
             }
         }
     }

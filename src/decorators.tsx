@@ -27,8 +27,21 @@ const FullSize = (storyFn: any) => (
     </div>
 );
 
+const Constrained = (width: number, height: number) => (storyFn: any) => (
+    <div
+        style={{
+            width,
+            height,
+            outline: '1px dashed lightgrey',
+        }}
+    >
+        {storyFn()}
+    </div>
+);
+
 export {
     DialogDecorator,
     dialogDecoratorArgs,
     FullSize,
+    Constrained,
 };
