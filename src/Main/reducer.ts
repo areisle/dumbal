@@ -1,3 +1,5 @@
+import without from 'lodash.without';
+
 import {
     ClientCallbackParams,
     DEFAULT_MAX_NUMBER_OF_POINTS,
@@ -56,8 +58,10 @@ const handlers: Handlers = {
         players,
     }),
     [SERVER_EVENTS.CARD_PICKED_FROM_DISCARD]: (state, { card, playerId, count }) => {
-        const { activePlayer, players, discard } = state;
-        const prevPlayer = getPreviousPlayer(players, activePlayer);
+        const {
+            activePlayer, players, discard, out,
+        } = state;
+        const prevPlayer = getPreviousPlayer(without(players, ...out), activePlayer);
         return {
             ...state,
             discard: {
