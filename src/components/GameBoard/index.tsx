@@ -45,6 +45,7 @@ interface AvatarContentProps extends BoardChildRenderProps {
      * the main player is ready
      */
     showReady: boolean;
+    out: boolean;
 }
 
 const AvatarContent = (props: AvatarContentProps) => {
@@ -61,12 +62,14 @@ const AvatarContent = (props: AvatarContentProps) => {
         isLoser,
         ready,
         showReady,
+        out,
     } = props;
 
     const allowPickFromDiscard = (
         stage === GAME_STAGE.PICKING_CARD
         && isPreviouslyActivePlayer
         && showActions
+        && !out
     );
 
     const [discardOpen, setDiscardOpen] = useState(false);
@@ -125,7 +128,7 @@ const AvatarContent = (props: AvatarContentProps) => {
                 Pick From Discard
             </Button>
         );
-    } else if (stage === GAME_STAGE.BETWEEN_ROUNDS && showReady && ready) {
+    } else if (stage === GAME_STAGE.BETWEEN_ROUNDS && showReady && ready && !out) {
         content = (
             <>
                 <Typography>{isCurrent ? 'you\'re ready' : `${playerId} is ready`}</Typography>
@@ -139,7 +142,7 @@ const AvatarContent = (props: AvatarContentProps) => {
                 />
             </>
         );
-    } else if (stage === GAME_STAGE.BETWEEN_ROUNDS && showReady) {
+    } else if (stage === GAME_STAGE.BETWEEN_ROUNDS && showReady && !out) {
         content = (
             <Typography>
                 waiting for
@@ -223,12 +226,13 @@ function GameBoard(props: GameBoardProps) {
             isLoser={!winners.includes(childProps.playerId as PlayerId) && roundEndedBy === childProps.playerId}
             isWinner={winners.includes(childProps.playerId as PlayerId)}
             onPickFromDiscard={onPickFromDiscard}
+            out={out.includes(childProps.playerId as PlayerId)}
             ready={Boolean(ready[childProps.playerId as PlayerId])}
             showActions={activePlayer === playerId}
             showReady={Boolean(ready[playerId as PlayerId])}
             stage={stage}
         />
-    ), [activePlayer, discard, onPickFromDiscard, playerId, ready, roundEndedBy, stage, winners]);
+    ), [activePlayer, discard, onPickFromDiscard, out, playerId, ready, roundEndedBy, stage, winners]);
 
     return (
         <Board

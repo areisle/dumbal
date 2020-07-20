@@ -207,7 +207,9 @@ function Main() {
                 )}
                 showReadyButton={Boolean(
                     stage === GAME_STAGE.BETWEEN_ROUNDS
-                    && playerId && !ready[playerId],
+                    && playerId
+                    && !ready[playerId]
+                    && !out.includes(playerId),
                 )}
             />
             {/* your hand */}
