@@ -5,14 +5,14 @@
     &__avatar-content {
         width: 100%;
 
-        --offset: max(2rem, min(10vmin, 100px));
+        --offset: max(2em, min(8vmin, 100px));
 
-        --card-width: calc((var(--grid-square-size) - var(--offset)) * 0.6);
-        --card-height: calc((var(--grid-square-size) - var(--offset)));
+        --card-width: min(240px, calc((var(--grid-square-size) - var(--offset)) * 0.55));
+        --card-height: min(400px, calc((var(--grid-square-size) - var(--offset)) * 0.9));
 
         .playing-cards-set {
-            --playing-cards-set__cards-overlap-x: calc(var(--card-width) - 2em);
-            --playing-cards-set__cards-overlap-y: calc(var(--card-height) - 2em);
+            --playing-cards-set__cards-overlap-x: calc(var(--card-width) - var(--offset));
+            --playing-cards-set__cards-overlap-y: calc(var(--card-height) - var(--offset));
 
             .playing-card {
                 width: var(--card-width);
@@ -20,7 +20,7 @@
             }
 
             .marker {
-                font-size: unquote("max(1em, min(8vmin, 3em))");
+                font-size: unquote("max(1em, min(6vmin, 3em))");
             }
         }
     }
