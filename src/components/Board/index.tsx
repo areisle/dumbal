@@ -28,9 +28,7 @@ export interface BoardProps {
 }
 
 interface CustomCSSProperties extends React.CSSProperties {
-    '--row-size': string;
     '--row-count': number;
-    '--col-size': string;
     '--grid-square-size': string;
     '--col-count': number;
 }
@@ -45,7 +43,7 @@ const getGridProperties = (
     playerCount: number,
 ): CustomCSSProperties => {
     const aspectRatio = boardWidth / boardHeight;
-    const gap = 10;
+    const gap = 15;
     let columns = 1;
     let rows = playerCount;
     if (playerCount === 2 && aspectRatio > 1) {
@@ -70,23 +68,11 @@ const getGridProperties = (
 
     const maxHeight = (boardHeight - (rows + 1) * gap) / rows;
     const maxWidth = (boardWidth - (columns + 1) * gap) / columns;
-
-    let rowSize = '1fr';
-    let colSize = '1fr';
-    let minSize;
-    if (maxHeight > maxWidth) {
-        rowSize = `${maxWidth}px`;
-        minSize = rowSize;
-    } else {
-        colSize = `${maxHeight}px`;
-        minSize = colSize;
-    }
+    const size = Math.min(maxHeight, maxWidth, 500);
 
     return {
-        '--row-size': rowSize,
-        '--grid-square-size': minSize,
+        '--grid-square-size': `${size}px`,
         '--row-count': rows,
-        '--col-size': colSize,
         '--col-count': columns,
     };
 };
