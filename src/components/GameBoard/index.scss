@@ -5,6 +5,10 @@
     &__avatar-content {
         width: 100%;
 
+        p {
+            display: inline;
+        }
+
         --offset: max(2em, min(8vmin, 100px));
 
         --card-width: min(240px, calc((var(--grid-square-size) - var(--offset)) * 0.55));
