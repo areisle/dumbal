@@ -11,10 +11,8 @@ export interface PlayingCardsSetProps {
     cards: GameState['cards'];
     selected?: Card[];
     onCardClick?: (e: React.MouseEvent, card: Card) => void;
-    onClick?: (e: React.MouseEvent | React.KeyboardEvent) => void;
     children?: ReactNode;
     className?: string;
-    clipped?: boolean;
     /**
      * @default 'stacked'
      */
@@ -28,7 +26,6 @@ function PlayingCardsSet(props: PlayingCardsSetProps) {
         onCardClick,
         children,
         className = '',
-        onClick,
         variant = 'stacked',
     } = props;
 
@@ -54,10 +51,6 @@ function PlayingCardsSet(props: PlayingCardsSetProps) {
                 `playing-cards-set--${variant}`,
                 className,
             )}
-            onClick={onClick}
-            onKeyPress={onClick}
-            role='button'
-            tabIndex={-1}
         >
             <div className='playing-cards-set__cards'>
                 {playingCards}

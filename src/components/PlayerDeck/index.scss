@@ -1,7 +1,6 @@
 @import '../../variables';
 
 .player-deck {
-
     &__reference {
 
         position: absolute;
@@ -53,5 +52,9 @@
                 font-size: unquote("max(1.25em, min(5vmin, 2.25em))");
             }
         }
+    }
+
+    &--empty {
+        z-index: 0;
     }
 }

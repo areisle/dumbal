@@ -49,7 +49,10 @@ function PlayerDeck(props: PlayerDeckProps) {
         <div
             className={clsx(
                 'player-deck',
-                { 'player-deck--open': open },
+                {
+                    'player-deck--open': open,
+                    'player-deck--empty': !cards.length,
+                },
             )}
         >
             <CardSelector
