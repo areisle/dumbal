@@ -1,4 +1,5 @@
 import { Redis } from 'ioredis';
+import flattenDepth from 'lodash.flattendepth';
 import shortid from 'shortid';
 
 import {
@@ -158,10 +159,11 @@ class Game {
             this.db.getCardsForPlayers(),
         ]);
 
-        const cardsInPlay = [
+        // type definition for flattenDepth doesn't account for depth
+        const cardsInPlay = flattenDepth([
             Object.values(discards),
             Object.values(cards),
-        ].flat(2);
+        ], 2) as unknown as Card[];
 
         const fullDeck = createDeck();
         const deck = removeCards(fullDeck, cardsInPlay);
