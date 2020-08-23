@@ -1,4 +1,5 @@
 import { Redis } from 'ioredis';
+import flattenDepth from 'lodash.flattendepth';
 import shortid from 'shortid';
 
 import {
@@ -10,6 +11,7 @@ import {
     MIN_NUMBER_OF_PLAYERS,
     PlayerId,
 } from '../src/types';
+import { removeCards } from '../src/utilities';
 import { GameDB } from './db';
 import { createDeck } from './deck';
 import {
@@ -149,6 +151,24 @@ class Game {
 
     getPlayers() {
         return this.db.getPlayers();
+    }
+
+    async resetDeck() {
+        const [discards, cards] = await Promise.all([
+            this.db.getDiscardForPlayers(),
+            this.db.getCardsForPlayers(),
+        ]);
+
+        // type definition for flattenDepth doesn't account for depth
+        const cardsInPlay = flattenDepth([
+            Object.values(discards),
+            Object.values(cards),
+        ], 2) as unknown as Card[];
+
+        const fullDeck = createDeck();
+        const deck = removeCards(fullDeck, cardsInPlay);
+        await this.db.setDeck(deck);
+        return deck;
     }
 
     /**
