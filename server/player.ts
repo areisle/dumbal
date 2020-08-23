@@ -108,7 +108,11 @@ class Player {
             throw new BadTiming(`Cannot draw a card. The timing is incorrect. Current game stage is: ${stage}.`);
         }
 
-        const deck = await this.db.deck();
+        let deck = await this.db.deck();
+        if (!deck.length) {
+            // deck is empty, replenish
+            deck = await this.game.resetDeck();
+        }
         const [drawn] = deck.splice(0, 1);
 
         await Promise.all([

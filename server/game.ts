@@ -10,6 +10,7 @@ import {
     MIN_NUMBER_OF_PLAYERS,
     PlayerId,
 } from '../src/types';
+import { removeCards } from '../src/utilities';
 import { GameDB } from './db';
 import { createDeck } from './deck';
 import {
@@ -149,6 +150,23 @@ class Game {
 
     getPlayers() {
         return this.db.getPlayers();
+    }
+
+    async resetDeck() {
+        const [discards, cards] = await Promise.all([
+            this.db.getDiscardForPlayers(),
+            this.db.getCardsForPlayers(),
+        ]);
+
+        const cardsInPlay = [
+            Object.values(discards),
+            Object.values(cards),
+        ].flat(2);
+
+        const fullDeck = createDeck();
+        const deck = removeCards(fullDeck, cardsInPlay);
+        await this.db.setDeck(deck);
+        return deck;
     }
 
     /**
